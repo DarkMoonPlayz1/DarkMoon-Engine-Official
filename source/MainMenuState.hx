@@ -38,7 +38,7 @@ class MainMenuState extends MusicBeatState
 	public static var firstStart:Bool = true;
 
 	public static var nightly:String = "";
-	public static var darkmoonEngineVer:String = "1.1" + nightly;
+	public static var darkmoonEngineVer:String = "1.1.2" + nightly;
 	public static var gameVer:String = "0.2.7.1";
 
 	var camFollow:FlxObject;

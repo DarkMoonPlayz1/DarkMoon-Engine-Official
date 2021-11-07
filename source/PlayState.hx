@@ -2311,16 +2311,36 @@ class PlayState extends MusicBeatState
 								altAnim = '-alt';
 						}
 	
+						var camX:Float = 0; // Small camera movement everytime the opponent sings (basically the same thing as boyfriend)
+						var camY:Float = 0;
+						var AnimToPlay:String = '';
+
 						switch (Math.abs(daNote.noteData))
 						{
 							case 2:
 								dad.playAnim('singUP' + altAnim, true);
+								camX = 0;
+								camY = -40;
+								camFollow.x += camX;
+								camFollow.y += camY;
 							case 3:
 								dad.playAnim('singRIGHT' + altAnim, true);
+								camX = 40;
+								camY = 0;
+								camFollow.x += camX;
+								camFollow.y += camY;
 							case 1:
 								dad.playAnim('singDOWN' + altAnim, true);
+								camX = 0;
+								camY = 40;
+								camFollow.x += camX;
+								camFollow.y += camY;
 							case 0:
 								dad.playAnim('singLEFT' + altAnim, true);
+								camX = -40;
+								camY = 0;
+								camFollow.x += camX;
+								camFollow.y += camY;
 						}
 
 						if (FlxG.save.data.cpuStrums)
@@ -3250,17 +3270,36 @@ class PlayState extends MusicBeatState
 					else
 						totalNotesHit += 1;
 	
+				var camX:Float = 0; //Small camera movement everytime boyfriend sings
+				var camY:Float = 0;
+				var animToPlay:String = '';
 
-					switch (note.noteData)
+					switch (Std.int(Math.abs(note.noteData)))
 					{
 						case 2:
 							boyfriend.playAnim('singUP', true);
+							camX = 0;
+							camY = -15;
+							camFollow.x += camX;
+							camFollow.y += camY;
 						case 3:
 							boyfriend.playAnim('singRIGHT', true);
+							camX = 15;
+							camY = 0;
+							camFollow.x += camX;
+							camFollow.y += camY;
 						case 1:
 							boyfriend.playAnim('singDOWN', true);
+							camX = 0;
+							camY = 15;
+							camFollow.x += camX;
+							camFollow.y += camY;
 						case 0:
 							boyfriend.playAnim('singLEFT', true);
+							camX = -15;
+							camY = 0;
+							camFollow.x += camX;
+							camFollow.y += camY;
 					}
 		
 					#if windows
