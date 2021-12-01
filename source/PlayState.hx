@@ -1815,9 +1815,9 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
-		scoreTxt.text = Ratings.CalculateRanking(songScore,songScoreDef,nps,maxNPS,accuracy);
+		scoreTxt.text = "Score:" + songScore + " | Misses:" + misses + " | Combo:" + combo + " | Accuracy:" + HelperFunctions.truncateFloat(accuracy, 2) + "% | Health:" + Math.round(health * 50) + "% | " + Ratings.GenerateLetterRank(accuracy);
 		if (!FlxG.save.data.accuracyDisplay)
-			scoreTxt.text = "Score: " + songScore;
+			scoreTxt.text = "Score:" + songScore + " | Misses:" + misses + " | Accuracy:" + HelperFunctions.truncateFloat(accuracy, 2) + "% | " + Ratings.GenerateLetterRank(accuracy);
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 		{

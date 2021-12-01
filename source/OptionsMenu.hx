@@ -35,7 +35,6 @@ class OptionsMenu extends MusicBeatState
 			new ScrollSpeedOption("Change your scroll speed (1 = Chart dependent)"),
 			new AccuracyDOption("Change how accuracy is calculated."),
 			new ResetButtonOption("If this option is enabled, you can press R to die. (Default is set to disabled)"),
-			// new OffsetMenu("Get a note offset based off of your inputs!"),
 			new CustomizeGameplay("Drag and drop gameplay modules you want to move")
 		]),
 		new OptionCategory("Appearance", [
@@ -57,6 +56,7 @@ class OptionsMenu extends MusicBeatState
 			new ReplayOption("View replays of any song you have played"),
 			#end
 			new FlashingLightsOption("Toggle flashing lights that can cause epileptic seizures and strain."),
+			new WatermarkOption("If you want to show the engines watermarks."),
 			new BotPlay("Autoplays for you if this option is enabled.")
 		])
 		
