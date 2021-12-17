@@ -35,7 +35,7 @@ class OptionsMenu extends MusicBeatState
 			new ScrollSpeedOption("Change your scroll speed (1 = Chart dependent)"),
 			new AccuracyDOption("Change how accuracy is calculated."),
 			new ResetButtonOption("If this option is enabled, you can press R to die. (Default is set to disabled)"),
-			new CustomizeGameplay("Drag and drop gameplay modules you want to move")
+			new CustomizeGameplay("Drag and drop gameplay modules you want to move"),
 		]),
 		new OptionCategory("Appearance", [
 			#if desktop
@@ -57,7 +57,7 @@ class OptionsMenu extends MusicBeatState
 			#end
 			new FlashingLightsOption("Toggle flashing lights that can cause epileptic seizures and strain."),
 			new WatermarkOption("If you want to show the engines watermarks."),
-			new BotPlay("Autoplays for you if this option is enabled.")
+			new BotPlay("Autoplays for you if this option is enabled."),
 		])
 		
 	];

@@ -2319,24 +2319,56 @@ class PlayState extends MusicBeatState
 						{
 							case 2:
 								dad.playAnim('singUP' + altAnim, true);
+								if(SONG.player2 == 'monster')
+								{
+									health -= 0.01;
+								}
+								if(SONG.player2 == 'monster-christmas')
+								{
+									health -= 0.01;
+								}
 								camX = 0;
 								camY = -40;
 								camFollow.x += camX;
 								camFollow.y += camY;
 							case 3:
 								dad.playAnim('singRIGHT' + altAnim, true);
+								if(SONG.player2 == 'monster')
+								{
+									health -= 0.01;
+								}
+								if(SONG.player2 == 'monster-christmas')
+								{
+									health -= 0.01;
+								}
 								camX = 40;
 								camY = 0;
 								camFollow.x += camX;
 								camFollow.y += camY;
 							case 1:
 								dad.playAnim('singDOWN' + altAnim, true);
+								if(SONG.player2 == 'monster')
+								{
+									health -= 0.01;
+								}
+								if(SONG.player2 == 'monster-christmas')
+								{
+									health -= 0.01;
+								}
 								camX = 0;
 								camY = 40;
 								camFollow.x += camX;
 								camFollow.y += camY;
 							case 0:
 								dad.playAnim('singLEFT' + altAnim, true);
+								if(SONG.player2 == 'monster')
+								{
+									health -= 0.01;
+								}
+								if(SONG.player2 == 'monster-christnas')
+								{
+									health -= 0.01;
+								}
 								camX = -40;
 								camY = 0;
 								camFollow.x += camX;
@@ -2420,7 +2452,7 @@ class PlayState extends MusicBeatState
 							}
 							else
 							{
-								health -= 0.010;
+								health -= 0.005;
 								vocals.volume = 0;
 								if (theFunne)
 									noteMiss(daNote.noteData, daNote);
@@ -3265,6 +3297,11 @@ class PlayState extends MusicBeatState
 					if (!note.isSustainNote)
 					{
 						popUpScore(note);
+						if (FlxG.save.data.donoteclick)
+						{
+							FlxG.sound.play(Paths.sound('note_click'));
+						}
+
 						combo += 1;
 					}
 					else
