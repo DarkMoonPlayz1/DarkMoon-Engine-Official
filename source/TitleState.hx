@@ -383,12 +383,12 @@ class TitleState extends MusicBeatState
 			// credTextShit.screenCenter();
 			case 5:
 				if (Main.watermarks)
-					createCoolText(['Ur mom engine', 'by']);
+					createCoolText(['DarkMoonEngine', '']);
 				else
-					createCoolText(['Made', 'by']);
+					createCoolText(['Made', 'by']); // this shit won't appear so L
 			case 7:
 				if (Main.watermarks)
-					addMoreText('Ur Dad XDDD');
+					addMoreText('Created by DarkMoon');
 				else
 				{
 					addMoreText('Newgrounds');

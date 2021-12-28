@@ -35,6 +35,12 @@ class Note extends FlxSprite
 	public static var BLUE_NOTE:Int = 1;
 	public static var RED_NOTE:Int = 3;
 
+	public var noteSplashDisabled:Bool = false;
+	public var noteSplashTexture:String = null;
+	public var noteSplashHue:Float = 0;
+	public var noteSplashSat:Float = 0;
+	public var noteSplashBrt:Float = 0;
+
 	public var rating:String = "shit";
 
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false)
