@@ -74,6 +74,8 @@ class Highscore
 			daSong += '-hard';
 		else if (diff == 3)
 			daSong += '-insane';
+		else if (diff == 4)
+			daSong += '-erect';
 
 		return daSong;
 	}

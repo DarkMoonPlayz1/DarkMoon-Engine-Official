@@ -235,8 +235,8 @@ class FreeplayState extends MusicBeatState
 		curDifficulty += change;
 
 		if (curDifficulty < 0)
-			curDifficulty = 3;
-		if (curDifficulty > 3)
+			curDifficulty = 4;
+		if (curDifficulty > 4)
 			curDifficulty = 0;
 
 		// adjusting the highscore song name to be compatible (changeDiff)
@@ -260,6 +260,8 @@ class FreeplayState extends MusicBeatState
 				diffText.text = "HARD";
 			case 3:
 			    diffText.text = "INSANE";
+			case 4:
+			    diffText.text = "ERECT";
 		}
 	}
 

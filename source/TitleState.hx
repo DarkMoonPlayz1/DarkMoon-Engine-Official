@@ -23,6 +23,7 @@ import flixel.util.FlxTimer;
 import io.newgrounds.NG;
 import lime.app.Application;
 import openfl.Assets;
+import flixel.addons.display.FlxBackdrop;
 
 #if windows
 import Discord.DiscordClient;
@@ -50,9 +51,6 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
-		#if polymod
-		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
-		#end
 		
 		#if sys
 		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
@@ -124,7 +122,8 @@ class TitleState extends MusicBeatState
 	var gfDance:FlxSprite;
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
-
+	var bg:FlxSprite;
+	
 	function startIntro()
 	{
 		if (!initialized)
@@ -157,10 +156,9 @@ class TitleState extends MusicBeatState
 		Conductor.changeBPM(102);
 		persistentUpdate = true;
 
-		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.PURPLE);
-		// bg.antialiasing = true;
-		// bg.setGraphicSize(Std.int(bg.width * 0.6));
-		// bg.updateHitbox();
+		bg = new FlxSprite().loadGraphic(Paths.image('cityTitleScreen', 'shared')); //YEAH HERE WE FUCKING GO
+		bg.antialiasing = true;
+		bg.updateHitbox();
 		add(bg);
 
 		logoBl = new FlxSprite(-150, -100);

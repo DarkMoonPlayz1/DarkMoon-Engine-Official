@@ -91,7 +91,7 @@ class PlayState extends MusicBeatState
 	var halloweenLevel:Bool = false;
 
 	var songLength:Float = 0;
-	
+	var darkmoonEngineWatermark:FlxText;
 	#if windows
 	// Discord RPC variables
 	var storyDifficultyText:String = "";
@@ -267,6 +267,8 @@ class PlayState extends MusicBeatState
 				storyDifficultyText = "Hard";
 			case 3:
 			    storyDifficultyText = "Insane"; //New difficulty bullshit
+			case 4:
+			    storyDifficultyText = "Erect"; //Yay Erect
 		}
 
 		iconRPC = SONG.player2;
@@ -938,10 +940,16 @@ class PlayState extends MusicBeatState
 			'health', 0, 2);
 		healthBar.scrollFactor.set();
 		healthBar.createFilledBar(0xFFC75EFF, 0xFF0091FF);
-		// healthBar
 		add(healthBar);
 
+		//Watermark for da engine
+		darkmoonEngineWatermark = new FlxText(4,healthBarBG.y + 50,0,SONG.song + " " + (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") + (Main.watermarks ? " - DarkMoonEngine " + MainMenuState.darkmoonEngineVer : ""), 16);
+		darkmoonEngineWatermark.setFormat(Paths.font("JAi_____.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+		darkmoonEngineWatermark.scrollFactor.set();
+		add(darkmoonEngineWatermark);
 
+		if (FlxG.save.data.downscroll)
+			darkmoonEngineWatermark.y = FlxG.height * 0.9 + 45;
 
 		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 20);
 		if (!FlxG.save.data.accuracyDisplay)
@@ -991,6 +999,7 @@ class PlayState extends MusicBeatState
 			songPosBG.cameras = [camHUD];
 			songPosBar.cameras = [camHUD];
 		}
+		darkmoonEngineWatermark.cameras = [camHUD];
 		if (loadRep)
 			replayTxt.cameras = [camHUD];
 
@@ -1743,6 +1752,7 @@ class PlayState extends MusicBeatState
 			if (luaModchart.getVar("showOnlyStrums",'bool'))
 			{
 				healthBarBG.visible = false;
+			darkmoonEngineWatermark.visible = false;
 				healthBar.visible = false;
 				iconP1.visible = false;
 				iconP2.visible = false;
@@ -1751,6 +1761,7 @@ class PlayState extends MusicBeatState
 			else
 			{
 				healthBarBG.visible = true;
+			darkmoonEngineWatermark.visible = true;
 				healthBar.visible = true;
 				iconP1.visible = true;
 				iconP2.visible = true;
@@ -1868,11 +1879,15 @@ class PlayState extends MusicBeatState
 			health = 2;
 		if (healthBar.percent < 20)
 			iconP1.animation.curAnim.curFrame = 1;
+        else if (healthBar.percent > 80)
+		    iconP1.animation.curAnim.curFrame = 2; //Display Player 1's winning icon
 		else
 			iconP1.animation.curAnim.curFrame = 0;
 
 		if (healthBar.percent > 80)
 			iconP2.animation.curAnim.curFrame = 1;
+        else if (healthBar.percent < 20)
+		    iconP2.animation.curAnim.curFrame = 2; //Display Player 2's winning icon
 		else
 			iconP2.animation.curAnim.curFrame = 0;
 
@@ -2201,7 +2216,7 @@ class PlayState extends MusicBeatState
 
 		if (unspawnNotes[0] != null)
 		{
-			if (unspawnNotes[0].strumTime - Conductor.songPosition < 3500)
+			if (unspawnNotes[0].strumTime - Conductor.songPosition < 3500 * SONG.speed) //hopefully it fixes that
 			{
 				var dunceNote:Note = unspawnNotes[0];
 				notes.add(dunceNote);
@@ -2587,6 +2602,9 @@ class PlayState extends MusicBeatState
 					if (storyDifficulty == 3)
 						difficulty = '-insane';
 
+					if (storyDifficulty == 4)
+						difficulty = '-erect';
+
 					trace('LOADING NEXT SONG');
 					// pre lowercasing the next story song name
 					var nextSongLowercase = StringTools.replace(PlayState.storyPlaylist[0], " ", "-").toLowerCase();
@@ -2699,7 +2717,7 @@ class PlayState extends MusicBeatState
 						totalNotesHit += 1;
 					sicks++;
 
-				var sploosh:FlxSprite = new FlxSprite(daNote.x, playerStrums.members[daNote.noteData].y);
+				var sploosh:FlxSprite = new FlxSprite(daNote.x, playerStrums.members[daNote.noteData].y); //da note splooshes code because why not
 				if (!curStage.startsWith('schoolEvilB'))
 				{
 					var tex:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('noteSplashes', 'shared');
@@ -2980,7 +2998,7 @@ class PlayState extends MusicBeatState
 				};
 				#end
 		 
-				// Prevents the players input if botplay option is enabled
+
 				if(FlxG.save.data.botplay)
 				{
 					holdArray = [false, false, false, false];
@@ -3002,10 +3020,10 @@ class PlayState extends MusicBeatState
 				{
 					boyfriend.holdTimer = 0;
 		 
-					var possibleNotes:Array<Note> = []; // notes that can be hit
-					var directionList:Array<Int> = []; // directions that can be hit
-					var dumbNotes:Array<Note> = []; // notes to kill later
-					var directionsAccounted:Array<Bool> = [false,false,false,false]; // we don't want to do judgments for more than one presses
+					var possibleNotes:Array<Note> = []; 
+					var directionList:Array<Int> = []; 
+					var dumbNotes:Array<Note> = []; 
+					var directionsAccounted:Array<Bool> = [false,false,false,false];
 					
 					notes.forEachAlive(function(daNote:Note)
 					{
@@ -3019,13 +3037,12 @@ class PlayState extends MusicBeatState
 									for (coolNote in possibleNotes)
 									{
 										if (coolNote.noteData == daNote.noteData && Math.abs(daNote.strumTime - coolNote.strumTime) < 10)
-										{ // if it's the same note twice at < 10ms distance, just delete it
-											// EXCEPT u cant delete it in this loop cuz it fucks with the collection lol
+										{ 
 											dumbNotes.push(daNote);
 											break;
 										}
 										else if (coolNote.noteData == daNote.noteData && daNote.strumTime < coolNote.strumTime)
-										{ // if daNote is earlier than existing note (coolNote), replace
+										{ 
 											possibleNotes.remove(coolNote);
 											possibleNotes.push(daNote);
 											break;
@@ -3065,42 +3082,32 @@ class PlayState extends MusicBeatState
 						goodNoteHit(possibleNotes[0]);
 					else if (possibleNotes.length > 0 && !dontCheck)
 					{
-						if (!FlxG.save.data.ghost)
+						if (!FlxG.save.data.ghost) //I'VE CLEANED UP A TON OF CODE FOR GHOST TAPPING AND REMOVED THE FUCKING MASH VIOLATIONS TO MAKE THE INPUT HARSH SO FUCK YOU
 						{
-							for (shit in 0...pressArray.length)
-								{ // if a direction is hit that shouldn't be
-									if (pressArray[shit] && !directionList.contains(shit))
-										noteMiss(shit, null);
+							for (sick in 1...pressArray.length)
+								{ 
+
 								}
 						}
 						for (coolNote in possibleNotes)
 						{
 							if (pressArray[coolNote.noteData])
 							{
-								if (mashViolations != 0)
-									mashViolations--;
 								scoreTxt.color = FlxColor.WHITE;
 								goodNoteHit(coolNote);
 							}
 						}
 					}
-					else if (!FlxG.save.data.ghost)
-						{
-							for (shit in 0...pressArray.length)
-								if (pressArray[shit])
-									noteMiss(shit, null);
-						}
 
 					if(dontCheck && possibleNotes.length > 0 && FlxG.save.data.ghost && !FlxG.save.data.botplay)
 					{
-						if (mashViolations > 8)
+
 						{
-							trace('mash violations ' + mashViolations);
-							scoreTxt.color = FlxColor.RED;
-							noteMiss(0,null);
+
+							scoreTxt.color = FlxColor.WHITE;
+
 						}
-						else
-							mashViolations++;
+
 					}
 
 				}
@@ -3245,12 +3252,11 @@ class PlayState extends MusicBeatState
 		return possibleNotes.length;
 	}
 	
-	var mashing:Int = 0;
-	var mashViolations:Int = 0;
+	var mashing:Int = 1;
 
 	var etternaModeScore:Int = 0;
 
-	function noteCheck(controlArray:Array<Bool>, note:Note):Void // sorry lol
+	function noteCheck(controlArray:Array<Bool>, note:Note):Void
 		{
 			var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition);
 
@@ -3259,64 +3265,36 @@ class PlayState extends MusicBeatState
 			/* if (loadRep)
 			{
 				if (controlArray[note.noteData])
-					goodNoteHit(note, false);
+					goodNoteHit(note, )true;
 				else if (rep.replay.keyPresses.length > repPresses && !controlArray[note.noteData])
 				{
 					if (NearlyEquals(note.strumTime,rep.replay.keyPresses[repPresses].time, 4))
 					{
-						goodNoteHit(note, false);
+						goodNoteHit(note, true);
 					}
 				}
 			} */
 			
 			if (controlArray[note.noteData])
 			{
-				goodNoteHit(note, (mashing > getKeyPresses(note)));
+				goodNoteHit(note, (mashing < getKeyPresses(note)));
 				
-				/*if (mashing > getKeyPresses(note) && mashViolations <= 2)
-				{
-					mashViolations++;
-
-					goodNoteHit(note, (mashing > getKeyPresses(note)));
-				}
-				else if (mashViolations > 2)
-				{
-					// this is bad but fuck you
-					playerStrums.members[0].animation.play('static');
-					playerStrums.members[1].animation.play('static');
-					playerStrums.members[2].animation.play('static');
-					playerStrums.members[3].animation.play('static');
-					health -= 0.4;
-					trace('mash ' + mashing);
-					if (mashing != 0)
-						mashing = 0;
-				}
-				else
-					goodNoteHit(note, false);*/
-
 			}
 		}
 
-		function goodNoteHit(note:Note, resetMashViolation = true):Void
+		function goodNoteHit(note:Note, resetMashViolation = false):Void
 			{
 
-				if (mashing != 0)
-					mashing = 0;
+
 
 				var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition);
 
 				note.rating = Ratings.CalculateRating(noteDiff);
 
-				// add newest note to front of notesHitArray
-				// the oldest notes are at the end and are removed first
 				if (!note.isSustainNote)
 					notesHitArray.unshift(Date.now());
 
-				if (!resetMashViolation && mashViolations >= 1)
-					mashViolations--;
 
-				if (mashViolations < 0)
-					mashViolations = 0;
 
 				if (!note.wasGoodHit)
 				{

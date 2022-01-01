@@ -39,7 +39,7 @@ class MainMenuState extends MusicBeatState
 
 	public static var nightly:String = "";
 
-	public static var darkmoonEngineVer:String = "1.1.5" + nightly;
+	public static var darkmoonEngineVer:String = "1.2" + nightly;
 	public static var gameVer:String = "0.2.7.1";
 
 	var camFollow:FlxObject;
@@ -67,15 +67,6 @@ class MainMenuState extends MusicBeatState
 		bg.screenCenter();
 		bg.antialiasing = true;
 		add(bg);
-
-		var menubf:FlxSprite = new FlxSprite(-200).loadGraphic(Paths.image('mainmenuBF')); //BF IN MAIN MENU, FEEL FREE TO CHANGE THIS TO YOUR OWN OR JUST CHANGE BF TO YOUR SPRITE WITHOUT SOURCE CODE
-		menubf.scrollFactor.x = 0;
-		menubf.scrollFactor.y = 0.10;
-		menubf.setGraphicSize(Std.int(bg.width * 1.1));
-		menubf.updateHitbox();
-		menubf.screenCenter();
-		menubf.antialiasing = true;
-		add(menubf);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
