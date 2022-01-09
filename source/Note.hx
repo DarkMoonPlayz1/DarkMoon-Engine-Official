@@ -133,9 +133,7 @@ class Note extends FlxSprite
 
 		// trace(prevNote);
 
-		// we make sure its downscroll and its a SUSTAIN NOTE (aka a trail, not a note)
-		// and flip it so it doesn't look weird.
-		// THIS DOESN'T FUCKING FLIP THE NOTE, CONTRIBUTERS DON'T JUST COMMENT THIS OUT JESUS
+
 		if (FlxG.save.data.downscroll && sustainNote) 
 			flipY = true;
 

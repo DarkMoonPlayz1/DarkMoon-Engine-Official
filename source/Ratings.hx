@@ -127,10 +127,10 @@ class Ratings
     public static function CalculateRanking(score:Int,scoreDef:Int,nps:Int,maxNPS:Int,accuracy:Float):String
     {
         return 
-        (FlxG.save.data.npsDisplay ? "Notes Per Second: " + nps + " (Max " + maxNPS + ")" + (!FlxG.save.data.botplay ? " | " : "") : "") + (!FlxG.save.data.botplay ?	// If NPS Toggle, then shows counter
+        (FlxG.save.data.npsDisplay ? "Notes Per Second: " + nps + " (Max " + maxNPS + ")" + (!FlxG.save.data.botplay ? " // " : "") : "") + (!FlxG.save.data.botplay ?
         "Score:" + (Conductor.safeFrames != 10 ? score + " (" + scoreDef + ")" : "" + score) + 									// Score
-        " | Miss Counter:" + PlayState.misses + 																				// Misses
-        " | Accuracy Percentage:" + (FlxG.save.data.botplay ? "No Rank" : HelperFunctions.truncateFloat(accuracy, 2) + " %") +  // Accuracy 
-        " | " + GenerateLetterRank(accuracy) : ""); 																			// Letter Rank
+        " // Miss Counter:" + PlayState.misses + 																				// Misses
+        " // Accuracy Percentage:" + (FlxG.save.data.botplay ? "No Rank" : HelperFunctions.truncateFloat(accuracy, 2) + " %") +  // Accuracy 
+        " // " + GenerateLetterRank(accuracy) : ""); 																			// Letter Rank
     }
 }

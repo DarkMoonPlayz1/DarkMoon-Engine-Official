@@ -24,13 +24,11 @@ class OptionsMenu extends MusicBeatState
 	var curSelected:Int = 0;
 
 	var options:Array<OptionCategory> = [
-		new OptionCategory("Ingame Modules", [
+		new OptionCategory("DarkMoonEngine", [
 			new DFJKOption(controls),
-			new DownscrollOption("Flips your HUD (Example: Arrows from top to bottom, health from bottom to top)."),
 			new GhostTapOption("You won't deal any damage and misses if this option is enabled."),
 			new Judgement("Customize your Hit Timings (LEFT or RIGHT)"),
 			#if desktop
-			new FPSCapOption("Cap your FPS"),
 			#end
 			new ScrollSpeedOption("Change your scroll speed (1 = Chart dependent)"),
 			new AccuracyDOption("Change how accuracy is calculated."),
@@ -39,17 +37,16 @@ class OptionsMenu extends MusicBeatState
 		]),
 		new OptionCategory("Appearance", [
 			#if desktop
+			new DownscrollOption("Flips your HUD (Example: Arrows from top to bottom, health from bottom to top)."),
 			new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay."),
 			new RainbowFPSOption("Make the FPS Counter Rainbow"),
 			new AccuracyOption("Display accuracy information."),
 			new NPSDisplayOption("Shows your current Notes Per Second."),
 			new SongPositionOption("Show the songs current position (as a bar)"),
-			new CpuStrums("CPU's strumline lights up when a note hits it."),
 			#else
 			new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay.")
 			#end
-		]),
-		
+		]),		
 		new OptionCategory("Misc", [
 			#if desktop
 			new FPSOption("Toggle if you want the FPS counter on/off"),
@@ -58,8 +55,7 @@ class OptionsMenu extends MusicBeatState
 			new FlashingLightsOption("Toggle flashing lights that can cause epileptic seizures and strain."),
 			new WatermarkOption("If you want to show the engines watermarks."),
 			new BotPlay("Autoplays for you if this option is enabled."),
-		])
-		
+	    ]),
 	];
 
 	public var acceptInput:Bool = true;

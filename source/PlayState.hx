@@ -118,7 +118,7 @@ class PlayState extends MusicBeatState
 
 	public static var strumLineNotes:FlxTypedGroup<FlxSprite> = null;
 	public static var playerStrums:FlxTypedGroup<FlxSprite> = null;
-	public static var cpuStrums:FlxTypedGroup<FlxSprite> = null;
+    public static var Player2GlowStrums:FlxTypedGroup<FlxSprite>;
 
 	private var camZooming:Bool = false;
 	private var curSong:String = "";
@@ -868,8 +868,8 @@ class PlayState extends MusicBeatState
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
 
+		Player2GlowStrums = new FlxTypedGroup<FlxSprite>();
 		playerStrums = new FlxTypedGroup<FlxSprite>();
-		cpuStrums = new FlxTypedGroup<FlxSprite>();
 
 		// startCountdown();
 
@@ -939,12 +939,60 @@ class PlayState extends MusicBeatState
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
 		healthBar.scrollFactor.set();
-		healthBar.createFilledBar(0xFFC75EFF, 0xFF0091FF);
+         switch(curSong.toLowerCase()) //Opponents now have custom health colors for each song
+		 {
+            case 'tutorial':
+                healthBar.createFilledBar(FlxColor.PINK, 0xFF0fa3ff);
+            case 'bopeebo':
+                healthBar.createFilledBar(FlxColor.PURPLE, 0xFF0fa3ff);
+            case 'fresh':
+                healthBar.createFilledBar(FlxColor.PURPLE, 0xFF0fa3ff);
+            case 'dadbattle':
+                healthBar.createFilledBar(FlxColor.PURPLE, 0xFF0fa3ff);
+            case 'dadbattle erect':
+                healthBar.createFilledBar(FlxColor.PURPLE, 0xFF0fa3ff);
+            case 'spookeez':
+                healthBar.createFilledBar(FlxColor.ORANGE, 0xFF0fa3ff);
+            case 'south':
+                healthBar.createFilledBar(FlxColor.ORANGE, 0xFF0fa3ff);
+            case 'south erect':
+                healthBar.createFilledBar(FlxColor.ORANGE, 0xFF0fa3ff);
+            case 'monster':
+                healthBar.createFilledBar(FlxColor.YELLOW, 0xFF0fa3ff);
+            case 'pico':
+                healthBar.createFilledBar(FlxColor.LIME, 0xFF0fa3ff);
+            case 'philly nice':
+                healthBar.createFilledBar(FlxColor.LIME, 0xFF0fa3ff);
+            case 'blammed':
+                healthBar.createFilledBar(FlxColor.LIME, 0xFF0fa3ff);
+            case 'ridge':
+                healthBar.createFilledBar(FlxColor.PINK, 0xFF0fa3ff);
+            case 'satin panties':
+                healthBar.createFilledBar(FlxColor.PINK, 0xFF0fa3ff);
+            case 'high':
+                healthBar.createFilledBar(FlxColor.PINK, 0xFF0fa3ff);
+            case 'milf':
+                healthBar.createFilledBar(FlxColor.PINK, 0xFF0fa3ff);
+            case 'cocoa':
+                healthBar.createFilledBar(FlxColor.PURPLE, 0xFF0fa3ff);
+            case 'eggnog':
+                healthBar.createFilledBar(FlxColor.PURPLE, 0xFF0fa3ff);
+            case 'winter horrorland':
+                healthBar.createFilledBar(FlxColor.YELLOW, 0xFF0fa3ff);
+            case 'senpai':
+                healthBar.createFilledBar(FlxColor.ORANGE, 0xFF0fa3ff);
+            case 'roses':
+                healthBar.createFilledBar(FlxColor.ORANGE, 0xFF0fa3ff);
+            case 'thorns':
+                healthBar.createFilledBar(FlxColor.RED, 0xFF0fa3ff);
+            default:
+                healthBar.createFilledBar(0xFF5200d0, 0xFF0fa3ff);
+        }
 		add(healthBar);
 
 		//Watermark for da engine
-		darkmoonEngineWatermark = new FlxText(4,healthBarBG.y + 50,0,SONG.song + " " + (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") + (Main.watermarks ? " - DarkMoonEngine " + MainMenuState.darkmoonEngineVer : ""), 16);
-		darkmoonEngineWatermark.setFormat(Paths.font("JAi_____.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+		darkmoonEngineWatermark = new FlxText(4,healthBarBG.y + 50,0,SONG.song + " " + (Main.watermarks ? " - DarkMoonEngine " + MainMenuState.darkmoonEngineVer : ""), 16);
+		darkmoonEngineWatermark.setFormat(Paths.font("ComicSansMS3.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		darkmoonEngineWatermark.scrollFactor.set();
 		add(darkmoonEngineWatermark);
 
@@ -959,7 +1007,6 @@ class PlayState extends MusicBeatState
 		if (offsetTesting)
 			scoreTxt.x += 300;
 		if(FlxG.save.data.botplay) scoreTxt.x = FlxG.width / 2 - 20;													  
-		add(scoreTxt);
 
 		replayTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (FlxG.save.data.downscroll ? 100 : -100), 0, "REPLAY", 20);
 		replayTxt.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
@@ -972,7 +1019,7 @@ class PlayState extends MusicBeatState
 		botPlayState = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (FlxG.save.data.downscroll ? 100 : -100), 0, "BOTPLAY", 20);
 		botPlayState.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		botPlayState.scrollFactor.set();
-		
+
 		if(FlxG.save.data.botplay && !loadRep) add(botPlayState);
 
 		iconP1 = new HealthIcon(SONG.player1, true);
@@ -994,6 +1041,7 @@ class PlayState extends MusicBeatState
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
+
 		if (FlxG.save.data.songPosition)
 		{
 			songPosBG.cameras = [camHUD];
@@ -1622,7 +1670,7 @@ class PlayState extends MusicBeatState
 			switch (player)
 			{
 				case 0:
-					cpuStrums.add(babyArrow);
+				    Player2GlowStrums.add(babyArrow);
 				case 1:
 					playerStrums.add(babyArrow);
 			}
@@ -1631,9 +1679,9 @@ class PlayState extends MusicBeatState
 			babyArrow.x += 50;
 			babyArrow.x += ((FlxG.width / 2) * player);
 			
-			cpuStrums.forEach(function(spr:FlxSprite)
+			Player2GlowStrums.forEach(function(spr:FlxSprite)
 			{					
-				spr.centerOffsets(); //CPU arrows start out slightly off-center
+				spr.centerOffsets();
 			});
 
 			strumLineNotes.add(babyArrow);
@@ -1702,7 +1750,6 @@ class PlayState extends MusicBeatState
 		Conductor.songPosition = FlxG.sound.music.time;
 		vocals.time = Conductor.songPosition;
 		vocals.play();
-
 		#if windows
 		DiscordClient.changePresence(detailsText + " " + SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), "\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
 		#end
@@ -1752,7 +1799,7 @@ class PlayState extends MusicBeatState
 			if (luaModchart.getVar("showOnlyStrums",'bool'))
 			{
 				healthBarBG.visible = false;
-			darkmoonEngineWatermark.visible = false;
+			    darkmoonEngineWatermark.visible = false;
 				healthBar.visible = false;
 				iconP1.visible = false;
 				iconP2.visible = false;
@@ -1761,7 +1808,7 @@ class PlayState extends MusicBeatState
 			else
 			{
 				healthBarBG.visible = true;
-			darkmoonEngineWatermark.visible = true;
+			    darkmoonEngineWatermark.visible = true;
 				healthBar.visible = true;
 				iconP1.visible = true;
 				iconP2.visible = true;
@@ -1826,9 +1873,9 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
-		scoreTxt.text = "Score:" + songScore + " | Misses:" + misses + " | Combo:" + combo + " | Accuracy:" + HelperFunctions.truncateFloat(accuracy, 2) + "% | Health:" + Math.round(health * 50) + "% | " + Ratings.GenerateLetterRank(accuracy);
+		scoreTxt.text = "Score:" + songScore + " // Misses:" + misses + " // Combo:" + combo + " // Accuracy:" + HelperFunctions.truncateFloat(accuracy, 2) + "% // Health:" + Math.round(health * 50) + "% // " + Ratings.GenerateLetterRank(accuracy);
 		if (!FlxG.save.data.accuracyDisplay)
-			scoreTxt.text = "Score:" + songScore + " | Misses:" + misses + " | Accuracy:" + HelperFunctions.truncateFloat(accuracy, 2) + "% | " + Ratings.GenerateLetterRank(accuracy);
+			scoreTxt.text = "Score:" + songScore + " // Misses:" + misses + " // Accuracy:" + HelperFunctions.truncateFloat(accuracy, 2) + "% // " + Ratings.GenerateLetterRank(accuracy);
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 		{
@@ -2251,7 +2298,7 @@ class PlayState extends MusicBeatState
 								if (daNote.mustPress)
 									daNote.y = (playerStrums.members[Math.floor(Math.abs(daNote.noteData))].y + 0.45 * (Conductor.songPosition - daNote.strumTime) * FlxMath.roundDecimal(FlxG.save.data.scrollSpeed == 1 ? SONG.speed : FlxG.save.data.scrollSpeed, 2));
 								else
-									daNote.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y + 0.45 * (Conductor.songPosition - daNote.strumTime) * FlxMath.roundDecimal(FlxG.save.data.scrollSpeed == 1 ? SONG.speed : FlxG.save.data.scrollSpeed, 2));
+									daNote.y = (Player2GlowStrums.members[Math.floor(Math.abs(daNote.noteData))].y + 0.45 * (Conductor.songPosition - daNote.strumTime) * FlxMath.roundDecimal(FlxG.save.data.scrollSpeed == 1 ? SONG.speed : FlxG.save.data.scrollSpeed, 2));
 								if(daNote.isSustainNote)
 								{
 									// Remember = minus makes notes go up, plus makes them go down
@@ -2372,24 +2419,21 @@ class PlayState extends MusicBeatState
 								}
 						}
 
-						if (FlxG.save.data.cpuStrums)
+					Player2GlowStrums.forEach(function(spr:FlxSprite)
+					{
+						if (Math.abs(daNote.noteData) == spr.ID)
 						{
-							cpuStrums.forEach(function(spr:FlxSprite)
+							spr.animation.play('confirm', true);
+							if (spr.animation.curAnim.name == 'confirm' && !curStage.startsWith('school'))
 							{
-								if (Math.abs(daNote.noteData) == spr.ID)
-								{
-									spr.animation.play('confirm', true);
-								}
-								if (spr.animation.curAnim.name == 'confirm' && !curStage.startsWith('school'))
-								{
-									spr.centerOffsets();
-									spr.offset.x -= 13;
-									spr.offset.y -= 13;
-								}
-								else
-									spr.centerOffsets();
-							});
+								spr.centerOffsets();
+								spr.offset.x -= 14;
+								spr.offset.y -= 14;
+							}
+							else
+								spr.centerOffsets();
 						}
+					});
 	
 						#if windows
 						if (luaModchart != null)
@@ -2465,9 +2509,9 @@ class PlayState extends MusicBeatState
 
 		deathCounter = 0;
 
-		if (FlxG.save.data.cpuStrums)
+		if (FlxG.save.data.Player2GlowStrums)
 		{
-			cpuStrums.forEach(function(spr:FlxSprite)
+			Player2GlowStrums.forEach(function(spr:FlxSprite)
 			{
 				if (spr.animation.finished)
 				{
@@ -2664,7 +2708,7 @@ class PlayState extends MusicBeatState
 
 			var daRating = daNote.rating;
 
-			switch(daRating)
+			switch(daRating) //note clicks get real, thx AlexShadowLOL for helping me on dis because I'm big stupid
 			{
 				case 'shit':
 					score = -300;
@@ -2675,6 +2719,7 @@ class PlayState extends MusicBeatState
 					shits++;
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 0.25;
+                    FlxG.sound.play(Paths.sound('note_click', 'shared'));
 				case 'bad':
 					daRating = 'bad';
 					score = 0;
@@ -2683,6 +2728,7 @@ class PlayState extends MusicBeatState
 					bads++;
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 0.50;
+                    FlxG.sound.play(Paths.sound('note_click', 'shared'));
 				case 'good':
 					daRating = 'good';
 					score = 200;
@@ -2692,12 +2738,14 @@ class PlayState extends MusicBeatState
 						health += 0.04;
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 0.75;
+                    FlxG.sound.play(Paths.sound('note_click', 'shared'));
 				case 'sick':
 					if (health < 2)
 						health += 0.04;
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 1;
 					sicks++;
+                    FlxG.sound.play(Paths.sound('note_click', 'shared'));
 
 				var sploosh:FlxSprite = new FlxSprite(daNote.x, playerStrums.members[daNote.noteData].y); //da note splooshes code because why not
 				if (!curStage.startsWith('schoolEvilB'))
@@ -3295,6 +3343,11 @@ class PlayState extends MusicBeatState
 	
 
 				var animToPlay:String = '';
+
+			if (note.noteData >= 0) //HEALTH REGEN ON HOLD NOTE IS BACK BABY
+				health += 0.023;
+			else
+				health += 0.004;
 
 					switch (Std.int(Math.abs(note.noteData)))
 					{
