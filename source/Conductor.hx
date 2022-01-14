@@ -7,7 +7,6 @@ import flixel.FlxG;
  * ...
  * @author
  */
-
 typedef BPMChangeEvent =
 {
 	var stepTime:Int;
@@ -23,6 +22,8 @@ class Conductor
 	public static var songPosition:Float;
 	public static var lastSongPos:Float;
 	public static var offset:Float = 0;
+
+	public static var rawPosition:Float;
 
 	public static var safeFrames:Int = 10;
 	public static var safeZoneOffset:Float = Math.floor((safeFrames / 60) * 1000); // is calculated in create(), is safeFrames in milliseconds
@@ -50,7 +51,7 @@ class Conductor
 		var totalPos:Float = 0;
 		for (i in 0...song.notes.length)
 		{
-			if(song.notes[i].changeBPM && song.notes[i].bpm != curBPM)
+			if (song.notes[i].changeBPM && song.notes[i].bpm != curBPM)
 			{
 				curBPM = song.notes[i].bpm;
 				var event:BPMChangeEvent = {
@@ -68,7 +69,23 @@ class Conductor
 		trace("new BPM map BUDDY " + bpmChangeMap);
 	}
 
-	public static function changeBPM(newBpm:Float)
+	public static function recalculateTimingStruct(SONG:Song)
+	{
+		for (i in SONG.eventObjects)
+		{
+			/*TimingStruct.addTiming(beat,bpm,endBeat, Std.parseFloat(OFFSET));
+
+				if (changeEvents.length != 0)
+				{
+					var data = TimingStruct.AllTimings[currentIndex - 1];
+					data.endBeat = beat;
+					data.length = (data.endBeat - data.startBeat) / (data.bpm / 60);
+					TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
+			}*/
+		}
+	}
+
+	public static function changeBPM(newBpm:Float, ?recalcLength = true)
 	{
 		bpm = newBpm;
 

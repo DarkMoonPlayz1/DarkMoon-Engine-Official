@@ -8,9 +8,17 @@ import flixel.FlxG;
 import openfl.display.FPS;
 import openfl.Lib;
 
+import haxe.Timer;
+import openfl.events.Event;
+import openfl.system.System;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
+
+
 class OptionCategory
 {
 	private var _options:Array<Option> = new Array<Option>();
+
 	public final function getOptions():Array<Option>
 	{
 		return _options;
@@ -21,18 +29,19 @@ class OptionCategory
 		_options.push(opt);
 	}
 
-	
 	public final function removeOption(opt:Option)
 	{
 		_options.remove(opt);
 	}
 
 	private var _name:String = "New Category";
-	public final function getName() {
+
+	public final function getName()
+	{
 		return _name;
 	}
 
-	public function new (catName:String, options:Array<Option>)
+	public function new(catName:String, options:Array<Option>)
 	{
 		_name = catName;
 		_options = options;
@@ -45,9 +54,11 @@ class Option
 	{
 		display = updateDisplay();
 	}
+
 	private var description:String = "";
 	private var display:String;
 	private var acceptValues:Bool = false;
+
 	public final function getDisplay():String
 	{
 		return display;
@@ -63,16 +74,32 @@ class Option
 		return description;
 	}
 
-	public function getValue():String { return throw "stub!"; };
-	
+	public function getValue():String
+	{
+		return throw "stub!";
+	};
+
 	// Returns whether the label is to be updated.
-	public function press():Bool { return throw "stub!"; }
-	private function updateDisplay():String { return throw "stub!"; }
-	public function left():Bool { return throw "stub!"; }
-	public function right():Bool { return throw "stub!"; }
+	public function press():Bool
+	{
+		return throw "stub!";
+	}
+
+	private function updateDisplay():String
+	{
+		return throw "stub!";
+	}
+
+	public function left():Bool
+	{
+		return throw "stub!";
+	}
+
+	public function right():Bool
+	{
+		return throw "stub!";
+	}
 }
-
-
 
 class DFJKOption extends Option
 {
@@ -93,6 +120,72 @@ class DFJKOption extends Option
 	private override function updateDisplay():String
 	{
 		return "Key Bindings";
+	}
+}
+
+class CpuStrums extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.cpuStrums = !FlxG.save.data.cpuStrums;
+
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return FlxG.save.data.cpuStrums ? "Light CPU Strums" : "CPU Strums stay static";
+	}
+}
+
+class GraphicLoading extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.cacheImages = !FlxG.save.data.cacheImages;
+
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return FlxG.save.data.cacheImages ? "Preload Characters" : "Do not Preload Characters";
+	}
+}
+
+class EditorRes extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.editorBG = !FlxG.save.data.editorBG;
+
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return FlxG.save.data.editorBG ? "Show Editor Grid" : "Do not Show Editor Grid";
 	}
 }
 
@@ -134,7 +227,7 @@ class GhostTapOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return FlxG.save.data.ghost ? "Ghost Tapping" : "No Ghost Tapping";
+		return FlxG.save.data.ghost ? "New Input" : "Old Input";
 	}
 }
 
@@ -145,6 +238,7 @@ class AccuracyOption extends Option
 		super();
 		description = desc;
 	}
+
 	public override function press():Bool
 	{
 		FlxG.save.data.accuracyDisplay = !FlxG.save.data.accuracyDisplay;
@@ -165,6 +259,7 @@ class SongPositionOption extends Option
 		super();
 		description = desc;
 	}
+
 	public override function press():Bool
 	{
 		FlxG.save.data.songPosition = !FlxG.save.data.songPosition;
@@ -185,6 +280,7 @@ class DistractionsAndEffectsOption extends Option
 		super();
 		description = desc;
 	}
+
 	public override function press():Bool
 	{
 		FlxG.save.data.distractions = !FlxG.save.data.distractions;
@@ -198,6 +294,48 @@ class DistractionsAndEffectsOption extends Option
 	}
 }
 
+class Colour extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.colour = !FlxG.save.data.colour;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return FlxG.save.data.colour ? "Character Colored HP Bars" : "Normal HP Bars";
+	}
+}
+
+class StepManiaOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.stepMania = !FlxG.save.data.stepMania;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Colors by quantization " + (!FlxG.save.data.stepMania ? "off" : "on");
+	}
+}
+
 class ResetButtonOption extends Option
 {
 	public function new(desc:String)
@@ -205,6 +343,7 @@ class ResetButtonOption extends Option
 		super();
 		description = desc;
 	}
+
 	public override function press():Bool
 	{
 		FlxG.save.data.resetButton = !FlxG.save.data.resetButton;
@@ -218,23 +357,24 @@ class ResetButtonOption extends Option
 	}
 }
 
-class NoteSplashOption extends Option
+class InstantRespawn extends Option
 {
 	public function new(desc:String)
 	{
 		super();
 		description = desc;
 	}
+
 	public override function press():Bool
 	{
-		FlxG.save.data.noteSplash = !FlxG.save.data.noteSplash;
+		FlxG.save.data.InstantRespawn = !FlxG.save.data.InstantRespawn;
 		display = updateDisplay();
 		return true;
 	}
 
 	private override function updateDisplay():String
 	{
-		return "Note Splash: " + (!FlxG.save.data.noteSplash ? "off" : "on");
+		return "Instant Respawn " + (!FlxG.save.data.InstantRespawn ? "off" : "on");
 	}
 }
 
@@ -245,6 +385,7 @@ class FlashingLightsOption extends Option
 		super();
 		description = desc;
 	}
+
 	public override function press():Bool
 	{
 		FlxG.save.data.flashing = !FlxG.save.data.flashing;
@@ -258,17 +399,78 @@ class FlashingLightsOption extends Option
 	}
 }
 
+class AntialiasingOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.antialiasing = !FlxG.save.data.antialiasing;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Antialiasing " + (!FlxG.save.data.antialiasing ? "off" : "on");
+	}
+}
+
+class MissSoundsOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.missSounds = !FlxG.save.data.missSounds;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Miss Sounds " + (!FlxG.save.data.missSounds ? "off" : "on");
+	}
+}
+
+class ShowInput extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.inputShow = !FlxG.save.data.inputShow;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.inputShow ? "Extended Score Info" : "Minimalized Info");
+	}
+}
+
 class Judgement extends Option
 {
-	
-
 	public function new(desc:String)
 	{
 		super();
 		description = desc;
 		acceptValues = true;
 	}
-	
+
 	public override function press():Bool
 	{
 		return true;
@@ -279,8 +481,8 @@ class Judgement extends Option
 		return "Safe Frames";
 	}
 
-	override function left():Bool {
-
+	override function left():Bool
+	{
 		if (Conductor.safeFrames == 1)
 			return false;
 
@@ -288,20 +490,30 @@ class Judgement extends Option
 		FlxG.save.data.frames = Conductor.safeFrames;
 
 		Conductor.recalculateTimings();
-		return true;
+		return false;
 	}
 
-	override function getValue():String {
-		return "Safe Frames: " + Conductor.safeFrames +
-		" - SIK: " + HelperFunctions.truncateFloat(45 * Conductor.timeScale, 0) +
-		"ms GD: " + HelperFunctions.truncateFloat(90 * Conductor.timeScale, 0) +
-		"ms BD: " + HelperFunctions.truncateFloat(135 * Conductor.timeScale, 0) + 
-		"ms SHT: " + HelperFunctions.truncateFloat(155 * Conductor.timeScale, 0) +
-		"ms TOTAL: " + HelperFunctions.truncateFloat(Conductor.safeZoneOffset,0) + "ms";
+	
+
+	override function getValue():String
+	{
+		return "Safe Frames: "
+			+ Conductor.safeFrames
+			+ " - SIK: "
+			+ HelperFunctions.truncateFloat(45 * Conductor.timeScale, 0)
+			+ "ms GD: "
+			+ HelperFunctions.truncateFloat(90 * Conductor.timeScale, 0)
+			+ "ms BD: "
+			+ HelperFunctions.truncateFloat(135 * Conductor.timeScale, 0)
+			+ "ms SHT: "
+			+ HelperFunctions.truncateFloat(166 * Conductor.timeScale, 0)
+			+ "ms TOTAL: "
+			+ HelperFunctions.truncateFloat(Conductor.safeZoneOffset, 0)
+			+ "ms";
 	}
 
-	override function right():Bool {
-
+	override function right():Bool
+	{
 		if (Conductor.safeFrames == 20)
 			return false;
 
@@ -309,6 +521,205 @@ class Judgement extends Option
 		FlxG.save.data.frames = Conductor.safeFrames;
 
 		Conductor.recalculateTimings();
+		return true;
+	}
+}
+
+class MiddleScrollOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.middleScroll = !FlxG.save.data.middleScroll;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.middleScroll ? "Upscroll Right Side Scroll" : "Upscroll Middle scroll");
+	}
+}
+
+class DMiddleScrollOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.middleDScroll = !FlxG.save.data.middleDScroll;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.middleDScroll ? "Downscroll Right Side Scroll" : " Downscroll Middlescroll");
+	}
+}
+
+class NotesplashesOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.notesplashes = !FlxG.save.data.notesplashes;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.notesplashes ? "Notesplashes ON" : "Notesplashes OFF");
+	}
+}
+
+class NewNoteskinOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.NewNotes = !FlxG.save.data.NewNotes;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.NewNotes ? "StepMania Noteskin ON" : "StepMania Noteskin OFF");
+	} // Old Noteskin
+}
+
+class HDNotesOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.HD = !FlxG.save.data.HD;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.HD ? "HD Notes ON" : "HD Notes OFF");
+	}
+}
+
+class CircleNotesOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.Circles = !FlxG.save.data.Circles;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.Circles ? "Circle Notes ON" : "Circle Notes OFF");
+	}
+}
+
+class HealthBarOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.HB = !FlxG.save.data.HB;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.HB ? "Healthbar Visible" : "No Healthbar");
+	}
+}
+
+class LaneUnderlayOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+		acceptValues = true;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.laneUnderlay = !FlxG.save.data.laneUnderlay;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.laneUnderlay ? "Lane underlay" : "No lane underlay");
+	}
+
+	override function right():Bool
+	{
+		FlxG.save.data.laneTransparency += 0.1;
+
+		if (FlxG.save.data.laneTransparency < 0)
+			FlxG.save.data.laneTransparency = 0;
+
+		if (FlxG.save.data.laneTransparency > 1)
+			FlxG.save.data.laneTransparency = 1;
+		return true;
+	}
+
+	override function getValue():String
+	{
+		return "Current Lane Underlay transparency: " + HelperFunctions.truncateFloat(FlxG.save.data.laneTransparency, 1);
+	}
+
+	override function left():Bool
+	{
+		FlxG.save.data.laneTransparency -= 0.1;
+
+		if (FlxG.save.data.laneTransparency < 0)
+			FlxG.save.data.laneTransparency = 0;
+
+		if (FlxG.save.data.laneTransparency > 1)
+			FlxG.save.data.laneTransparency = 1;
+
 		return true;
 	}
 }
@@ -324,7 +735,7 @@ class FPSOption extends Option
 	public override function press():Bool
 	{
 		FlxG.save.data.fps = !FlxG.save.data.fps;
-		(cast (Lib.current.getChildAt(0), Main)).toggleFPS(FlxG.save.data.fps);
+		(cast(Lib.current.getChildAt(0), Main)).toggleFPS(FlxG.save.data.fps);
 		display = updateDisplay();
 		return true;
 	}
@@ -335,7 +746,26 @@ class FPSOption extends Option
 	}
 }
 
+class ScoreScreen extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
 
+	public override function press():Bool
+	{
+		FlxG.save.data.scoreScreen = !FlxG.save.data.scoreScreen;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.scoreScreen ? "Show Score Screen" : "No Score Screen");
+	}
+}
 
 class FPSCapOption extends Option
 {
@@ -355,38 +785,40 @@ class FPSCapOption extends Option
 	{
 		return "FPS Cap";
 	}
-	
-	override function right():Bool {
-		if (FlxG.save.data.fpsCap >= 290)
+
+	override function right():Bool
+	{
+		if (FlxG.save.data.fpsCap >= 420)
 		{
-			FlxG.save.data.fpsCap = 290;
-			(cast (Lib.current.getChildAt(0), Main)).setFPSCap(290);
+			FlxG.save.data.fpsCap = 420;
+			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(290);
 		}
 		else
 			FlxG.save.data.fpsCap = FlxG.save.data.fpsCap + 10;
-		(cast (Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
+		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 
 		return true;
 	}
 
-	override function left():Bool {
-		if (FlxG.save.data.fpsCap > 290)
-			FlxG.save.data.fpsCap = 290;
+	override function left():Bool
+	{
+		if (FlxG.save.data.fpsCap > 420)
+			FlxG.save.data.fpsCap = 420;
 		else if (FlxG.save.data.fpsCap < 60)
 			FlxG.save.data.fpsCap = Application.current.window.displayMode.refreshRate;
 		else
 			FlxG.save.data.fpsCap = FlxG.save.data.fpsCap - 10;
-		(cast (Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
+				(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 		return true;
 	}
 
 	override function getValue():String
 	{
-		return "Current FPS Cap: " + FlxG.save.data.fpsCap + 
-		(FlxG.save.data.fpsCap == Application.current.window.displayMode.refreshRate ? "Hz (Refresh Rate)" : "");
+		return "Current FPS Cap: "
+			+ FlxG.save.data.fpsCap
+			+ (FlxG.save.data.fpsCap == Application.current.window.displayMode.refreshRate ? "Hz (Refresh Rate)" : "");
 	}
 }
-
 
 class ScrollSpeedOption extends Option
 {
@@ -407,7 +839,8 @@ class ScrollSpeedOption extends Option
 		return "Scroll Speed";
 	}
 
-	override function right():Bool {
+	override function right():Bool
+	{
 		FlxG.save.data.scrollSpeed += 0.1;
 
 		if (FlxG.save.data.scrollSpeed < 1)
@@ -418,11 +851,13 @@ class ScrollSpeedOption extends Option
 		return true;
 	}
 
-	override function getValue():String {
-		return "Current Scroll Speed: " + HelperFunctions.truncateFloat(FlxG.save.data.scrollSpeed,1);
+	override function getValue():String
+	{
+		return "Current Scroll Speed: " + HelperFunctions.truncateFloat(FlxG.save.data.scrollSpeed, 1);
 	}
 
-	override function left():Bool {
+	override function left():Bool
+	{
 		FlxG.save.data.scrollSpeed -= 0.1;
 
 		if (FlxG.save.data.scrollSpeed < 1)
@@ -435,7 +870,6 @@ class ScrollSpeedOption extends Option
 	}
 }
 
-
 class RainbowFPSOption extends Option
 {
 	public function new(desc:String)
@@ -447,7 +881,7 @@ class RainbowFPSOption extends Option
 	public override function press():Bool
 	{
 		FlxG.save.data.fpsRain = !FlxG.save.data.fpsRain;
-		(cast (Lib.current.getChildAt(0), Main)).changeFPSColor(FlxColor.WHITE);
+		(cast(Lib.current.getChildAt(0), Main)).changeFPSColor(FlxColor.WHITE);
 		display = updateDisplay();
 		return true;
 	}
@@ -455,6 +889,27 @@ class RainbowFPSOption extends Option
 	private override function updateDisplay():String
 	{
 		return "FPS Rainbow " + (!FlxG.save.data.fpsRain ? "off" : "on");
+	}
+}
+
+class Optimization extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.optimize = !FlxG.save.data.optimize;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Optimization " + (FlxG.save.data.optimize ? "ON" : "OFF");
 	}
 }
 
@@ -486,7 +941,7 @@ class ReplayOption extends Option
 		super();
 		description = desc;
 	}
-	
+
 	public override function press():Bool
 	{
 		trace("switch");
@@ -507,7 +962,7 @@ class AccuracyDOption extends Option
 		super();
 		description = desc;
 	}
-	
+
 	public override function press():Bool
 	{
 		FlxG.save.data.accuracyMod = FlxG.save.data.accuracyMod == 1 ? 0 : 1;
@@ -592,6 +1047,7 @@ class OffsetMenu extends Option
 		return "Time your offset";
 	}
 }
+
 class BotPlay extends Option
 {
 	public function new(desc:String)
@@ -599,7 +1055,7 @@ class BotPlay extends Option
 		super();
 		description = desc;
 	}
-	
+
 	public override function press():Bool
 	{
 		FlxG.save.data.botplay = !FlxG.save.data.botplay;
@@ -607,7 +1063,171 @@ class BotPlay extends Option
 		display = updateDisplay();
 		return true;
 	}
-	
+
 	private override function updateDisplay():String
 		return "BotPlay " + (FlxG.save.data.botplay ? "on" : "off");
+}
+
+class CamZoomOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.camzoom = !FlxG.save.data.camzoom;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Camera Zoom " + (!FlxG.save.data.camzoom ? "off" : "on");
+	}
+}
+
+class LockWeeksOption extends Option
+{
+	var confirm:Bool = false;
+
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		if (!confirm)
+		{
+			confirm = true;
+			display = updateDisplay();
+			return true;
+		}
+		FlxG.save.data.weekUnlocked = 1;
+		StoryMenuState.weekUnlocked = [true, true];
+		confirm = false;
+		trace('Weeks Locked');
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return confirm ? "Confirm Story Reset" : "Reset Story Progress";
+	}
+}
+
+class ResetScoreOption extends Option
+{
+	var confirm:Bool = false;
+
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		if (!confirm)
+		{
+			confirm = true;
+			display = updateDisplay();
+			return true;
+		}
+		FlxG.save.data.songScores = null;
+		for (key in Highscore.songScores.keys())
+		{
+			Highscore.songScores[key] = 0;
+		}
+		FlxG.save.data.songCombos = null;
+		for (key in Highscore.songCombos.keys())
+		{
+			Highscore.songCombos[key] = '';
+		}
+		confirm = false;
+		trace('Highscores Wiped');
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return confirm ? "Confirm Score Reset" : "Reset Score";
+	}
+}
+
+class ResetSettings extends Option
+{
+	var confirm:Bool = false;
+
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		if (!confirm)
+		{
+			confirm = true;
+			display = updateDisplay();
+			return true;
+		}
+		FlxG.save.data.weekUnlocked = null;
+		FlxG.save.data.newInput = null;
+		FlxG.save.data.downscroll = null;
+		FlxG.save.data.antialiasing = null;
+		FlxG.save.data.missSounds = null;
+		FlxG.save.data.dfjk = null;
+		FlxG.save.data.accuracyDisplay = null;
+		FlxG.save.data.offset = null;
+		FlxG.save.data.songPosition = null;
+		FlxG.save.data.fps = null;
+		FlxG.save.data.changedHit = null;
+		FlxG.save.data.fpsRain = null;
+		FlxG.save.data.fpsCap = null;
+		FlxG.save.data.scrollSpeed = null;
+		FlxG.save.data.npsDisplay = null;
+		FlxG.save.data.frames = null;
+		FlxG.save.data.accuracyMod = null;
+		FlxG.save.data.watermark = null;
+		FlxG.save.data.ghost = null;
+		FlxG.save.data.distractions = null;
+		FlxG.save.data.colour = null;
+		FlxG.save.data.stepMania = null;
+		FlxG.save.data.flashing = null;
+		FlxG.save.data.resetButton = null;
+		FlxG.save.data.botplay = null;
+		FlxG.save.data.cpuStrums = null;
+		FlxG.save.data.strumline = null;
+		FlxG.save.data.customStrumLine = null;
+		FlxG.save.data.camzoom = null;
+		FlxG.save.data.scoreScreen = null;
+		FlxG.save.data.middleScroll = null;
+		FlxG.save.data.middleDScroll = null;
+		FlxG.save.data.inputShow = null;
+		FlxG.save.data.NewNotes = null;
+		FlxG.save.data.HD = null;
+
+		FlxG.save.data.optimize = null;
+		FlxG.save.data.cacheImages = null;
+		FlxG.save.data.editor = null;
+
+		DarkMoonEngineData.initSave();
+		confirm = false;
+		trace('All settings have been reset');
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return confirm ? "Confirm Settings Reset" : "Reset Settings";
+	}
 }

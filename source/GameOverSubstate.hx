@@ -6,6 +6,7 @@ import flixel.FlxSubState;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import flixel.FlxBasic;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
@@ -14,11 +15,13 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	var stageSuffix:String = "";
 
+	var trackedAssets:Array<FlxBasic> = [];
+
 	public function new(x:Float, y:Float)
 	{
-		var daStage = PlayState.curStage;
+		var daStage = PlayState.Stage.curStage;
 		var daBf:String = '';
-		switch (PlayState.SONG.player1)
+		switch (PlayState.boyfriend.curCharacter)
 		{
 			case 'bf-pixel':
 				stageSuffix = '-pixel';
@@ -48,6 +51,8 @@ class GameOverSubstate extends MusicBeatSubstate
 		bf.playAnim('firstDeath');
 	}
 
+	var startVibin:Bool = false;
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -57,15 +62,33 @@ class GameOverSubstate extends MusicBeatSubstate
 			endBullshit();
 		}
 
+		if (FlxG.save.data.InstantRespawn)
+		{
+			LoadingState.loadAndSwitchState(new PlayState());
+		}
+
 		if (controls.BACK)
 		{
 			FlxG.sound.music.stop();
 
+			remove(camFollow);
+			remove(bf);
+
 			if (PlayState.isStoryMode)
+			{
+				unloadAssets();
 				FlxG.switchState(new StoryMenuState());
+				unloadAssets();
+			}
 			else
+			{	
+				unloadAssets();
 				FlxG.switchState(new FreeplayState());
+				unloadAssets();
+			}
+			
 			PlayState.loadRep = false;
+			PlayState.stageTesting = false;
 		}
 
 		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.curFrame == 12)
@@ -76,6 +99,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished)
 		{
 			FlxG.sound.playMusic(Paths.music('gameOver' + stageSuffix));
+			startVibin = true;
 		}
 
 		if (FlxG.sound.music.playing)
@@ -88,6 +112,10 @@ class GameOverSubstate extends MusicBeatSubstate
 	{
 		super.beatHit();
 
+		if (startVibin && !isEnding)
+		{
+			bf.playAnim('deathLoop', true);
+		}
 		FlxG.log.add('beat');
 	}
 
@@ -97,6 +125,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	{
 		if (!isEnding)
 		{
+			PlayState.startTime = 0;
 			isEnding = true;
 			bf.playAnim('deathConfirm', true);
 			FlxG.sound.music.stop();
@@ -105,9 +134,26 @@ class GameOverSubstate extends MusicBeatSubstate
 			{
 				FlxG.camera.fade(FlxColor.BLACK, 2, false, function()
 				{
+					remove(camFollow);
+					remove(bf);
+					
 					LoadingState.loadAndSwitchState(new PlayState());
+					PlayState.stageTesting = false;
 				});
 			});
+		}
+	}
+	override function add(Object:FlxBasic):FlxBasic
+	{
+		trackedAssets.insert(trackedAssets.length, Object);
+		return super.add(Object);
+	}
+
+	function unloadAssets():Void
+	{
+		for (asset in trackedAssets)
+		{
+			remove(asset);
 		}
 	}
 }

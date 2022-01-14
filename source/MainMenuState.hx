@@ -1,5 +1,6 @@
 package;
 
+import flixel.input.gamepad.FlxGamepad;
 import Controls.KeyboardScheme;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -12,7 +13,6 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import io.newgrounds.NG;
 import lime.app.Application;
 
 #if windows
@@ -28,7 +28,7 @@ class MainMenuState extends MusicBeatState
 	var menuItems:FlxTypedGroup<FlxSprite>;
 
 	#if !switch
-	var optionShit:Array<String> = ['story mode', 'freeplay', 'twitter', 'options'];
+	var optionShit:Array<String> = ['story mode', 'freeplay', 'twitter', 'options']; //we go gaming mode
 	#else
 	var optionShit:Array<String> = ['story mode', 'freeplay'];
 	#end
@@ -39,18 +39,17 @@ class MainMenuState extends MusicBeatState
 
 	public static var nightly:String = "";
 
-	public static var darkmoonEngineVer:String = "1.2.2" + nightly;
-	public static var gameVer:String = "Friday Night Funkin': 0.2.7.1 - ";
+	public static var darkmoonEngineVer:String = "1.3" + nightly;
+	public static var gameVer:String = "0.2.7.1";
 
+	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 	public static var finishedFunnyMove:Bool = false;
 
 	override function create()
 	{
-		#if windows
-		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Menus", null);
-		#end
+		clean();
+
 
 		if (!FlxG.sound.music.playing)
 		{
@@ -65,12 +64,23 @@ class MainMenuState extends MusicBeatState
 		bg.setGraphicSize(Std.int(bg.width * 1.1));
 		bg.updateHitbox();
 		bg.screenCenter();
-		bg.antialiasing = true;
+		bg.antialiasing = FlxG.save.data.antialiasing;
 		add(bg);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
 
+		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+		magenta.scrollFactor.x = 0;
+		magenta.scrollFactor.y = 0.10;
+		magenta.setGraphicSize(Std.int(magenta.width * 1.1));
+		magenta.updateHitbox();
+		magenta.screenCenter();
+		magenta.visible = false;
+		magenta.antialiasing = FlxG.save.data.antialiasing;
+		magenta.color = 0xFFfd719b;
+		add(magenta);
+		// magenta.scrollFactor.set();
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
@@ -88,7 +98,7 @@ class MainMenuState extends MusicBeatState
 			menuItem.screenCenter(X);
 			menuItems.add(menuItem);
 			menuItem.scrollFactor.set();
-			menuItem.antialiasing = true;
+			menuItem.antialiasing = FlxG.save.data.antialiasing;
 			if (firstStart)
 				FlxTween.tween(menuItem,{y: 60 + (i * 160)},1 + (i * 0.25) ,{ease: FlxEase.expoInOut, onComplete: function(flxTween:FlxTween) 
 					{ 
@@ -103,7 +113,7 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.60 * (60 / FlxG.save.data.fpsCap));
 
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, gameVer +  (Main.watermarks ? "" + "DarkMoon Engine: " + darkmoonEngineVer : ""), 12);
+		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, gameVer +  (Main.watermarks ? " Base Engine - " + darkmoonEngineVer + " DarkMoon Engine" : ""), 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
@@ -132,13 +142,29 @@ class MainMenuState extends MusicBeatState
 
 		if (!selectedSomethin)
 		{
-			if (controls.UP_P)
+			var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
+
+			if (gamepad != null)
+			{
+				if (gamepad.justPressed.DPAD_UP)
+				{
+					FlxG.sound.play(Paths.sound('scrollMenu'));
+					changeItem(-1);
+				}
+				if (gamepad.justPressed.DPAD_DOWN)
+				{
+					FlxG.sound.play(Paths.sound('scrollMenu'));
+					changeItem(1);
+				}
+			}
+
+			if (FlxG.keys.justPressed.UP)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeItem(-1);
 			}
 
-			if (controls.DOWN_P)
+			if (FlxG.keys.justPressed.DOWN)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeItem(1);
@@ -153,13 +179,15 @@ class MainMenuState extends MusicBeatState
 			{
 				if (optionShit[curSelected] == 'twitter')
 				{
-					fancyOpenURL("https://twitter.com/DarkMoonPlayz2"); //takes u to my twitter page, pls follow
+					fancyOpenURL("https://twitter.com/DarkMoonPlayz2"); //takes u to my twitter page (follow me teehee)
 				}
 				else
 				{
 					selectedSomethin = true;
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					
+					if (FlxG.save.data.flashing)
+						FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
 					menuItems.forEach(function(spr:FlxSprite)
 					{
@@ -200,7 +228,6 @@ class MainMenuState extends MusicBeatState
 		menuItems.forEach(function(spr:FlxSprite)
 		{
 			spr.screenCenter(X);
-			spr.x -= 200;
 		});
 	}
 	
