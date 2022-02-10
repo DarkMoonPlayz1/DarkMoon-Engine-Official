@@ -1,6 +1,5 @@
 package;
 
-import flixel.math.FlxPoint;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.FlxG;
@@ -9,7 +8,6 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
-import openfl.Lib;
 
 using StringTools;
 
@@ -46,24 +44,8 @@ class Alphabet extends FlxSpriteGroup
 
 	var isBold:Bool = false;
 
-	var pastX:Float = 0;
-	var pastY:Float = 0;
-
-	// ThatGuy: Variables here to be used later
-	var xScale:Float;
-	var yScale:Float;
-
-	// ThatGuy: Added 2 more variables, xScale and yScale for resizing text
-	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = false, typed:Bool = false, shouldMove:Bool = false, xScale:Float = 1,
-			yScale:Float = 1)
+	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = false, typed:Bool = false, shouldMove:Bool = false)
 	{
-		pastX = x;
-		pastY = y;
-
-		// ThatGuy: Have to assign these variables
-		this.xScale = xScale;
-		this.yScale = yScale;
-
 		super(x, y);
 
 		_finalText = text;
@@ -80,28 +62,8 @@ class Alphabet extends FlxSpriteGroup
 			{
 				addText();
 			}
+
 		}
-	}
-
-	public function reType(text, xScale:Float = 1, yScale:Float = 1)
-	{
-		for (i in listOAlphabets)
-			remove(i);
-		_finalText = text;
-		this.text = text;
-
-		lastSprite = null;
-
-		updateHitbox();
-
-		listOAlphabets.clear();
-		x = pastX;
-		y = pastY;
-
-		this.xScale = xScale;
-		this.yScale = yScale;
-
-		addText();
 	}
 
 	public function addText()
@@ -125,24 +87,17 @@ class Alphabet extends FlxSpriteGroup
 			{
 				if (lastSprite != null)
 				{
-					// ThatGuy: This is the line that fixes the spacing error when the x position of this class's objects was anything other than 0
-					xPos = lastSprite.x - pastX + lastSprite.width;
+					xPos = lastSprite.x + lastSprite.width;
 				}
 
 				if (lastWasSpace)
 				{
-					// ThatGuy: Also this line
-					xPos += 40 * xScale;
+					xPos += 40;
 					lastWasSpace = false;
 				}
 
 				// var letter:AlphaCharacter = new AlphaCharacter(30 * loopNum, 0);
 				var letter:AlphaCharacter = new AlphaCharacter(xPos, 0);
-
-				// ThatGuy: These are the lines that change the individual scaling of each character
-				letter.scale.set(xScale, yScale);
-				letter.updateHitbox();
-
 				listOAlphabets.add(letter);
 
 				if (isBold)
@@ -168,7 +123,6 @@ class Alphabet extends FlxSpriteGroup
 
 	public var personTalking:String = 'gf';
 
-	// ThatGuy: THIS FUNCTION ISNT CHANGED! Because i dont use it lol
 	public function startTypedText():Void
 	{
 		_finalText = text;
@@ -283,42 +237,6 @@ class Alphabet extends FlxSpriteGroup
 
 		super.update(elapsed);
 	}
-
-	// ThatGuy: Ooga booga function for resizing text, with the option of wanting it to have the same midPoint
-	// Side note: Do not, EVER, do updateHitbox() unless you are retyping the whole thing. Don't know why, but the position gets retarded if you do that
-	public function resizeText(xScale:Float, yScale:Float, xStaysCentered:Bool = true, yStaysCentered:Bool = false):Void
-	{
-		var oldMidpoint:FlxPoint = this.getMidpoint();
-		reType(text, xScale, yScale);
-		if (!(xStaysCentered && yStaysCentered))
-		{
-			if (xStaysCentered)
-			{
-				// I can just use this juicy new function i made
-				moveTextToMidpoint(new FlxPoint(oldMidpoint.x, getMidpoint().y));
-			}
-			if (yStaysCentered)
-			{
-				moveTextToMidpoint(new FlxPoint(getMidpoint().x, oldMidpoint.y));
-			}
-		}
-		else
-		{
-			moveTextToMidpoint(new FlxPoint(oldMidpoint.x, oldMidpoint.y));
-		}
-	}
-
-	// ThatGuy: Function used to keep text centered on one point instead of manually having to come up with offsets for each sentence
-	public function moveTextToMidpoint(midpoint:FlxPoint):Void
-	{
-		/*
-			e.g. You want your midpoint at (100, 100)
-			and your text is 200 wide, 50 tall
-			then, x = 100 - 200/2, y = 100 - 50/2
-		 */
-		this.x = midpoint.x - this.width / 2;
-		this.y = midpoint.y - this.height / 2;
-	}
 }
 
 class AlphaCharacter extends FlxSprite
@@ -336,17 +254,14 @@ class AlphaCharacter extends FlxSprite
 		super(x, y);
 		var tex = Paths.getSparrowAtlas('alphabet');
 		frames = tex;
-		if (FlxG.save.data.antialiasing)
-		{
-			antialiasing = true;
-		}
+
+		antialiasing = true;
 	}
 
 	public function createBold(letter:String)
 	{
 		animation.addByPrefix(letter, letter.toUpperCase() + " bold", 24);
 		animation.play(letter);
-		animation.curAnim.frameRate = 24 * (60 / (cast(Lib.current.getChildAt(0), Main)).getFPS());
 		updateHitbox();
 	}
 
