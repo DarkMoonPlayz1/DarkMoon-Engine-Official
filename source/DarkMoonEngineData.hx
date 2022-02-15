@@ -23,6 +23,15 @@ class DarkMoonEngineData
 		if (FlxG.save.data.songPosition == null)
 			FlxG.save.data.songPosition = false;
 
+		if (FlxG.save.data.midscroll == null)
+			FlxG.save.data.midscroll = false;
+
+		if (FlxG.save.data.hitsounds == null)
+			FlxG.save.data.hitsounds = false;
+
+		if(FlxG.save.data.fullcombomode = null)
+			FlxG.save.data.fullcombomode = false;
+
 		if (FlxG.save.data.fps == null)
 			FlxG.save.data.fps = false;
 

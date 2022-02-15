@@ -29,7 +29,6 @@ class OptionsMenu extends MusicBeatState
 			new GhostTapOption("You won't deal any damage and misses if this option is enabled."),
 			new Judgement("Customize your Hit Timings (LEFT or RIGHT)"),
 			#if desktop
-			new FPSCapOption("Cap your FPS"),
 			#end
 			new ScrollSpeedOption("Change your scroll speed (1 = Chart dependent)"),
 			new AccuracyDOption("Change how accuracy is calculated."),
@@ -40,6 +39,7 @@ class OptionsMenu extends MusicBeatState
 			#if desktop
 			new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay."),
 			new DownscrollOption("Flips your HUD (Example: Arrows from top to bottom, health from bottom to top)."),
+			new MiddlescrollOption("Sets the strumline to the middle of the screen and hides the opponent's."),
 			new RainbowFPSOption("Make the FPS Counter Rainbow"),
 			new AccuracyOption("Display accuracy information."),
 			new NPSDisplayOption("Shows your current Notes Per Second."),
@@ -49,10 +49,15 @@ class OptionsMenu extends MusicBeatState
 			new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay.")
 			#end
 		]),
+
+		new OptionCategory("Gamemodes", [
+			new FullComboMode("You are forced to full combo which ever song you're on or else you'll die if this is enabled."),
+		]),
 		
 		new OptionCategory("Misc", [
 			#if desktop
 			new FPSOption("Toggle if you want the FPS counter on/off"),
+			new HitSoundsOption("Activate hit sounds every time you hit a note."),
 			new ReplayOption("View replays of any song you have played"),
 			#end
 			new FlashingLightsOption("Toggle flashing lights that can cause epileptic seizures and strain."),
