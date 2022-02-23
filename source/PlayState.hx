@@ -901,7 +901,7 @@ class PlayState extends MusicBeatState
 
 		add(camFollow);
 
-		FlxG.camera.follow(camFollow, LOCKON, 0.04 * (30 / (cast (Lib.current.getChildAt(0), Main)).getFPS()));
+		FlxG.camera.follow(camFollow, LOCKON, 0.04);
 		// FlxG.camera.setScrollBounds(0, FlxG.width, 0, FlxG.height);
 		FlxG.camera.zoom = defaultCamZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
@@ -944,11 +944,71 @@ class PlayState extends MusicBeatState
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
 		healthBar.scrollFactor.set();
-		healthBar.createFilledBar(0xFFC75EFF, 0xFF0091FF);
+	
+	      switch (curSong.toLowerCase()) // setting health bar colours for every song, YOU HAVE TO PUT SPACES (DEPENDING ON THE SONG) IN ORDER FOR WHATEVER COLOR CHOICE YOU PUT OR ELSE IT WON'T WORK!!
+		  {
+			case 'tutorial':
+			{
+				healthBar.createFilledBar(0xFFB8172F, 0xFF0091FF);
+				trace("GENERATED HEALTH BAR COLOURS.");
+			}	
+			case 'bopeebo' | 'fresh' | 'dadbattle':
+			{
+				healthBar.createFilledBar(0xFFC75EFF, 0xFF0091FF);
+				trace("GENERATED HEALTH BAR COLOURS.");
+			}	
+			case 'spookeez' | 'south':
+			{
+				healthBar.createFilledBar(0xFFF99D27, 0xFF0091FF);
+				trace("GENERATED HEALTH BAR COLOURS.");
+			}	
+			case 'monster' | 'winter horrorland':
+			{
+				healthBar.createFilledBar(0xFFFFFF66, 0xFF0091FF);
+				trace("GENERATED HEALTH BAR COLOURS.");
+			}		
+			case 'pico' | 'philly nice' | 'blammed':
+			{
+				healthBar.createFilledBar(0xFFB9DD7F, 0xFF0091FF);
+				trace("GENERATED HEALTH BAR COLOURS.");
+			}		
+			case 'satin panties' | 'high' | 'milf' | 'ridge':
+			{
+				healthBar.createFilledBar(0xFFF66A9B, 0xFF0091FF);
+				trace("GENERATED HEALTH BAR COLOURS.");
+			}	
+			case 'senpai' | 'roses':
+			{
+				healthBar.createFilledBar(0xFFFFA400, 0xFF0091FF);
+				trace("GENERATED HEALTH BAR COLOURS.");
+			}
+			case 'thorns':
+			{
+				healthBar.createFilledBar(0xFFFC3339, 0xFF0091FF);
+				trace("GENERATED HEALTH BAR COLOURS.");
+			}		
+			case 'dadbattle erect':
+			{
+				healthBar.createFilledBar(0xFFC75EFF, 0xFF0091FF);
+				trace("GENERATED HEALTH BAR COLOURS.");
+			}	
+			case 'south erect':
+			{
+				healthBar.createFilledBar(0xFFF99D27, 0xFF0091FF);
+				trace("GENERATED HEALTH BAR COLOURS.");
+			}	
+			default: // in case it doesn't find the song for some reason (to prevent crashes)
+			{
+				// purple color  blue color (dad & bf)
+				healthBar.createFilledBar(0xFF8A36D2, 0xFF2A9DF4);
+				trace("GENERATED DEFAULT HEALTH BAR COLOURS.");
+			}							
+		}
+
 		add(healthBar);
 
 		//Watermark for da engine
-		darkmoonEngineWatermark = new FlxText(4,healthBarBG.y + 50,0,SONG.song + " " + (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") + (Main.watermarks ? " - DarkMoonEngine " + MainMenuState.darkmoonEngineVer : ""), 16);
+		darkmoonEngineWatermark = new FlxText(4,healthBarBG.y + 50,0,SONG.song + " " + (Main.watermarks ? " - DarkMoonEngine " + MainMenuState.darkmoonEngineVer : ""), 16);
 		darkmoonEngineWatermark.setFormat(Paths.font("JAi_____.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		darkmoonEngineWatermark.scrollFactor.set();
 		add(darkmoonEngineWatermark);
@@ -2149,6 +2209,27 @@ class PlayState extends MusicBeatState
 		{
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, 0.95);
 			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, 0.95);
+		}
+
+		if(FlxG.save.data.fullcombomode) { //Full Combo Mode
+			if(misses == 1)
+			{
+				boyfriend.stunned = true;
+
+				persistentUpdate = false;
+				persistentDraw = false;
+				paused = true;
+
+				vocals.stop();
+				FlxG.sound.music.stop();
+
+				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+
+				#if windows
+				// Game Over doesn't get his own variable because it's only used here
+				DiscordClient.changePresence("GAME OVER -- " + SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy),"\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
+				#end
+			}
 		}
 
 

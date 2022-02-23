@@ -140,27 +140,6 @@ class DownscrollOption extends Option
 	}
 }
 
-class HitSoundsOption extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc;
-	}
-
-	public override function press():Bool
-	{
-		FlxG.save.data.hitsounds = !FlxG.save.data.hitsounds;
-		display = updateDisplay();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return 'Hit Sounds ' + (FlxG.save.data.hitsounds ? "on" : "off");
-	}
-}
-
 class MiddlescrollOption extends Option
 {
 	public function new(desc:String)
@@ -179,6 +158,27 @@ class MiddlescrollOption extends Option
 	private override function updateDisplay():String
 	{
 		return 'Middle Scroll ' + (FlxG.save.data.midscroll ? "on" : "off");
+	}
+}
+
+class HitSoundsOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.hitsounds = !FlxG.save.data.hitsounds;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return 'Hit Sounds ' + (FlxG.save.data.hitsounds ? "on" : "off");
 	}
 }
 

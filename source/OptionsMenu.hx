@@ -38,8 +38,8 @@ class OptionsMenu extends MusicBeatState
 		new OptionCategory("Appearance", [
 			#if desktop
 			new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay."),
-			new DownscrollOption("Flips your HUD (Example: Arrows from top to bottom, health from bottom to top)."),
-			new MiddlescrollOption("Sets the strumline to the middle of the screen and hides the opponent's."),
+			new DownscrollOption("Flips your HUD (Example: Arrows from top to bottom, health and accuracy from bottom to top)."),
+			new MiddlescrollOption("Sets the strumline to the middle of the screen and hides the opponent's. NOT FUNCTIONAL YET"),
 			new RainbowFPSOption("Make the FPS Counter Rainbow"),
 			new AccuracyOption("Display accuracy information."),
 			new NPSDisplayOption("Shows your current Notes Per Second."),
@@ -51,7 +51,7 @@ class OptionsMenu extends MusicBeatState
 		]),
 
 		new OptionCategory("Gamemodes", [
-			new FullComboMode("You are forced to full combo which ever song you're on or else you'll die if this is enabled."),
+			new FullComboMode("You are forced to full combo which ever song you're on or else you'll die."),
 		]),
 		
 		new OptionCategory("Misc", [
