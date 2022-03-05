@@ -9,6 +9,7 @@ using StringTools;
 
 class Character extends FlxSprite
 {
+	public var noteSkin:String = 'normal';
 	public var animOffsets:Map<String, Array<Dynamic>>;
 	public var debugMode:Bool = false;
 
@@ -32,6 +33,7 @@ class Character extends FlxSprite
 		{
 			case 'gf':
 				// GIRLFRIEND CODE
+				noteSkin = 'GFnote_assets'; // noteskin
 				tex = Paths.getSparrowAtlas('characters/GF_assets');
 				frames = tex;
 				animation.addByPrefix('cheer', 'GF Cheer', 24, false);
@@ -63,6 +65,7 @@ class Character extends FlxSprite
 				playAnim('danceRight');
 
 			case 'gf-christmas':
+			noteSkin = 'GFnote_assets'; // noteskin
 				tex = Paths.getSparrowAtlas('characters/gfChristmas');
 				frames = tex;
 				animation.addByPrefix('cheer', 'GF Cheer', 24, false);
@@ -94,6 +97,7 @@ class Character extends FlxSprite
 				playAnim('danceRight');
 
 			case 'gf-car':
+				noteSkin = 'GFnote_assets'; // noteskin
 				tex = Paths.getSparrowAtlas('characters/gfCar');
 				frames = tex;
 				animation.addByIndices('singUP', 'GF Dancing Beat Hair blowing CAR', [0], "", 24, false);
@@ -107,6 +111,7 @@ class Character extends FlxSprite
 				playAnim('danceRight');
 
 			case 'gf-pixel':
+				noteSkin = 'GFnote_assets'; // noteskin
 				tex = Paths.getSparrowAtlas('characters/gfPixel');
 				frames = tex;
 				animation.addByIndices('singUP', 'GF IDLE', [2], "", 24, false);
@@ -125,6 +130,7 @@ class Character extends FlxSprite
 			case 'dad':
 				// DAD ANIMATION LOADING CODE
 				tex = Paths.getSparrowAtlas('characters/DADDY_DEAREST', 'shared');
+				noteSkin = 'DADnote_assets'; // noteskin
 				frames = tex;
 				animation.addByPrefix('idle', 'Dad idle dance', 24);
 				animation.addByPrefix('singUP', 'Dad Sing Note UP', 24);
@@ -140,6 +146,7 @@ class Character extends FlxSprite
 
 				playAnim('idle');
 			case 'spooky':
+				noteSkin = 'SPOOKYnote_assets'; // noteskin
 				tex = Paths.getSparrowAtlas('characters/spooky_kids_assets');
 				frames = tex;
 				animation.addByPrefix('singUP', 'spooky UP NOTE', 24, false);
@@ -159,6 +166,7 @@ class Character extends FlxSprite
 
 				playAnim('danceRight');
 			case 'mom':
+				noteSkin = 'MOM_noteassets'; // noteskin
 				tex = Paths.getSparrowAtlas('characters/Mom_Assets');
 				frames = tex;
 
@@ -179,6 +187,7 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 			case 'mom-car':
+				noteSkin = 'MOM_noteassets'; // noteskin
 				tex = Paths.getSparrowAtlas('characters/momCar');
 				frames = tex;
 
@@ -198,6 +207,7 @@ class Character extends FlxSprite
 
 				playAnim('idle');
 			case 'monster':
+				noteSkin = 'MONSTERnote_assets'; // noteskin
 				tex = Paths.getSparrowAtlas('characters/Monster_Assets');
 				frames = tex;
 				animation.addByPrefix('idle', 'monster idle', 24, false);
@@ -213,6 +223,7 @@ class Character extends FlxSprite
 				addOffset("singDOWN", -30, -40);
 				playAnim('idle');
 			case 'monster-christmas':
+				noteSkin = 'MONSTERnote_assets'; // noteskin
 				tex = Paths.getSparrowAtlas('characters/monsterChristmas');
 				frames = tex;
 				animation.addByPrefix('idle', 'monster idle', 24, false);
@@ -228,6 +239,7 @@ class Character extends FlxSprite
 				addOffset("singDOWN", -40, -94);
 				playAnim('idle');
 			case 'pico':
+				noteSkin = 'PICOnote_assets'; // noteskin
 				tex = Paths.getSparrowAtlas('characters/Pico_FNF_assetss');
 				frames = tex;
 				animation.addByPrefix('idle', "Pico Idle Dance", 24);
@@ -268,6 +280,7 @@ class Character extends FlxSprite
 
 			case 'bf':
 				var tex = Paths.getSparrowAtlas('characters/BOYFRIEND', 'shared');
+				noteSkin = 'normal'; // noteskin
 				frames = tex;
 
 				trace(tex.frames.length);
@@ -309,6 +322,7 @@ class Character extends FlxSprite
 				flipX = true;
 
 			case 'bf-christmas':
+				noteSkin = 'normal'; // noteskin
 				var tex = Paths.getSparrowAtlas('characters/bfChristmas');
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
@@ -337,6 +351,7 @@ class Character extends FlxSprite
 
 				flipX = true;
 			case 'bf-car':
+				noteSkin = 'normal'; // noteskin
 				var tex = Paths.getSparrowAtlas('characters/bfCar');
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
@@ -362,6 +377,7 @@ class Character extends FlxSprite
 
 				flipX = true;
 			case 'bf-pixel':
+				noteSkin = 'arrows-pixel'; // noteskin
 				frames = Paths.getSparrowAtlas('characters/bfPixel');
 				animation.addByPrefix('idle', 'BF IDLE', 24, false);
 				animation.addByPrefix('singUP', 'BF UP NOTE', 24, false);
@@ -413,6 +429,7 @@ class Character extends FlxSprite
 				flipX = true;
 
 			case 'senpai':
+				noteSkin = 'arrows-pixel'; // noteskin
 				frames = Paths.getSparrowAtlas('characters/senpai');
 				animation.addByPrefix('idle', 'Senpai Idle', 24, false);
 				animation.addByPrefix('singUP', 'SENPAI UP NOTE', 24, false);
@@ -433,6 +450,7 @@ class Character extends FlxSprite
 
 				antialiasing = false;
 			case 'senpai-angry':
+				noteSkin = 'arrows-pixel'; // noteskin
 				frames = Paths.getSparrowAtlas('characters/senpai');
 				animation.addByPrefix('idle', 'Angry Senpai Idle', 24, false);
 				animation.addByPrefix('singUP', 'Angry Senpai UP NOTE', 24, false);
@@ -453,6 +471,7 @@ class Character extends FlxSprite
 				antialiasing = false;
 
 			case 'spirit':
+				noteSkin = 'arrows-pixel'; // noteskin
 				frames = Paths.getPackerAtlas('characters/spirit');
 				animation.addByPrefix('idle', "idle spirit_", 24, false);
 				animation.addByPrefix('singUP', "up_", 24, false);
@@ -474,6 +493,7 @@ class Character extends FlxSprite
 				antialiasing = false;
 
 			case 'parents-christmas':
+				noteSkin = 'PARENTSnote_assets'; // noteskin
 				frames = Paths.getSparrowAtlas('characters/mom_dad_christmas_assets');
 				animation.addByPrefix('idle', 'Parent Christmas Idle', 24, false);
 				animation.addByPrefix('singUP', 'Parent Up Note Dad', 24, false);

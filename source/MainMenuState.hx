@@ -39,7 +39,7 @@ class MainMenuState extends MusicBeatState
 
 	public static var nightly:String = "";
 
-	public static var darkmoonEngineVer:String = "1.4.3 + Nightly :)" + nightly;
+	public static var darkmoonEngineVer:String = "1.4.4" + nightly;
 	public static var gameVer:String = "Friday Night Funkin': 0.2.7.1 - ";
 
 	var camFollow:FlxObject;
