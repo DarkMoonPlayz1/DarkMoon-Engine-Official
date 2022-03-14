@@ -166,7 +166,7 @@ class Character extends FlxSprite
 
 				playAnim('danceRight');
 			case 'mom':
-				noteSkin = 'MOM_noteassets'; // noteskin
+				noteSkin = 'MOMnote_assets'; // noteskin
 				tex = Paths.getSparrowAtlas('characters/Mom_Assets');
 				frames = tex;
 
@@ -187,7 +187,7 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 			case 'mom-car':
-				noteSkin = 'MOM_noteassets'; // noteskin
+				noteSkin = 'MOMnote_assets'; // noteskin
 				tex = Paths.getSparrowAtlas('characters/momCar');
 				frames = tex;
 

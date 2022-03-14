@@ -1,2 +1,1 @@
-Drop you custom sounds here!
-It should be in .ogg otherwise it won't work!!!
+Drop you custom sounds here [Must be .ogg or else it won't work]
