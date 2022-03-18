@@ -89,6 +89,7 @@ class PlayState extends MusicBeatState
 	public static var noteBools:Array<Bool> = [false, false, false, false];
 
 	var halloweenLevel:Bool = false;
+	var isCutscene:Bool = false;
 
 	var songLength:Float = 0;
 	var darkmoonEngineWatermark:FlxText;
@@ -317,8 +318,8 @@ class PlayState extends MusicBeatState
 		// var gameCam:FlxCamera = FlxG.camera;
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
-		camHUD.bgColor.alpha = 0;
-
+		camHUD.bgColor.alpha = 0;	
+		
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD);
 
@@ -333,7 +334,7 @@ class PlayState extends MusicBeatState
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
 
-		trace('INFORMATION ABOUT WHAT U PLAYIN WIT:\nFRAMES: ' + PlayStateChangeables.safeFrames + '\nZONE: ' + Conductor.safeZoneOffset + '\nTS: ' + Conductor.timeScale + '\nBotPlay : ' + PlayStateChangeables.botPlay);
+		trace('INFORMATION ABOUT WHAT U PLAYIN WIT:\nFRAMES: ' + PlayStateChangeables.safeFrames + '\nZONE: ' + Conductor.safeZoneOffset + '\nTS: ' + Conductor.timeScale + '\nAutoPlay : ' + PlayStateChangeables.botPlay);
 	
 		//dialogue shit
 		switch (songLowercase)
@@ -1016,7 +1017,7 @@ class PlayState extends MusicBeatState
 
 		//Watermark for da engine
 		darkmoonEngineWatermark = new FlxText(4,healthBarBG.y + 50,0,SONG.song + " " + (Main.watermarks ? " - DarkMoonEngine " + MainMenuState.darkmoonEngineVer : ""), 16);
-		darkmoonEngineWatermark.setFormat(Paths.font("JAi_____.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+		darkmoonEngineWatermark.setFormat(Paths.font("COMIC.TTF"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		darkmoonEngineWatermark.scrollFactor.set();
 		add(darkmoonEngineWatermark);
 
@@ -1043,16 +1044,16 @@ class PlayState extends MusicBeatState
 		judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${misses}';
 		add(judgementCounter);
 
-		replayTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (FlxG.save.data.downscroll ? 100 : -100), 0, "REPLAY", 20);
-		replayTxt.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+		replayTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (FlxG.save.data.downscroll ? 100 : -100), 0, "Replay", 20);
+		replayTxt.setFormat(Paths.font("COMIC.TTF"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		replayTxt.scrollFactor.set();
 		if (loadRep)
 		{
 			add(replayTxt);
 		}
-		// Literally copy-paste of the above, fu
-		botPlayState = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (FlxG.save.data.downscroll ? 100 : -100), 0, "BOTPLAY", 20);
-		botPlayState.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+
+		botPlayState = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (FlxG.save.data.downscroll ? 100 : -100), 0, "AutoPlay", 20);
+		botPlayState.setFormat(Paths.font("COMIC.TTF"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		botPlayState.scrollFactor.set();
 		
 		if(FlxG.save.data.botplay && !loadRep) add(botPlayState);
@@ -1947,7 +1948,7 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
-		scoreTxt.text = "Score:" + songScore + " // Misses:" + misses + " // Combo:" + combo + " // Accuracy:" + HelperFunctions.truncateFloat(accuracy, 2) + "% // Health:" + Math.round(health * 50) + "% // " + Ratings.GenerateLetterRank(accuracy);
+		scoreTxt.text = "Score:" + songScore + " // Misses:" + misses + " // Accuracy:" + HelperFunctions.truncateFloat(accuracy, 2) + "% // Health:" + Math.round(health * 50) + "% // " + Ratings.GenerateLetterRank(accuracy);
 		if (!FlxG.save.data.accuracyDisplay)
 			scoreTxt.text = "Score:" + songScore + " // Misses:" + misses + " // Accuracy:" + HelperFunctions.truncateFloat(accuracy, 2) + "% // " + Ratings.GenerateLetterRank(accuracy);
 
@@ -2841,7 +2842,6 @@ class PlayState extends MusicBeatState
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 1;
 					sicks++;
-
 				var sploosh:FlxSprite = new FlxSprite(daNote.x, playerStrums.members[daNote.noteData].y); //da note splooshes code because why not
 				if (!curStage.startsWith('schoolEvilB'))
 				{
@@ -2865,8 +2865,7 @@ class PlayState extends MusicBeatState
 						sploosh.offset.y += 80;
 						sploosh.animation.finishCallback = function(name) sploosh.kill();
 					}
-				}
-		
+				}									
 	     }
 
 
@@ -2985,9 +2984,9 @@ class PlayState extends MusicBeatState
 			comboSpr.updateHitbox();
 			rating.updateHitbox();
 	
-			comboSpr.cameras = [camHUD];	
+			comboSpr.cameras = [camHUD];
+	
 			currentTimingShown.cameras = [camHUD];
-			rating.cameras = [camHUD];
 
 			var seperatedScore:Array<Int> = [];
 	
@@ -3015,7 +3014,6 @@ class PlayState extends MusicBeatState
 				numScore.screenCenter();
 				numScore.x = rating.x + (43 * daLoop) - 50;
 				numScore.y = rating.y + 100;
-				numScore.cameras = [camHUD];
 
 				if (!curStage.startsWith('school'))
 				{
@@ -3757,6 +3755,35 @@ class PlayState extends MusicBeatState
 			}
 		}
 	}
+
+var video:MP4Handler; // MP4 VIDEO SUPPORT LET'S GOOOOOOO
+
+function playStartCutscene(name:String)
+{
+	inCutscene = true;
+
+	video = new MP4Handler();
+	video.finishCallback = function()
+	{
+		startCountdown();
+	}
+
+	video.playVideo(Paths.video(name));
+}
+
+function playEndCutscene(name:String)
+{
+	inCutscene = true;
+
+	video = new MP4Handler();
+	video.finishCallback = function()
+	{
+		SONG = Song.loadFromJson(storyPlaylist[0].toLowerCase());
+		LoadingState.loadAndSwitchState(new PlayState());
+	}
+
+	video.playVideo(Paths.video(name));
+}
 
 	var curLight:Int = 0;
 }

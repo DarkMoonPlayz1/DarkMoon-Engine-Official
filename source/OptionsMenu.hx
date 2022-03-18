@@ -39,8 +39,8 @@ class OptionsMenu extends MusicBeatState
 			#if desktop
 			new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay."),
 			new DownscrollOption("Flips your HUD (Example: Arrows from top to bottom, health and accuracy from bottom to top)."),
-			new MiddlescrollOption("Sets the strumline to the middle of the screen and hides the opponent's. NOT FUNCTIONAL YET"),
-			new RainbowFPSOption("Make the FPS Counter Rainbow"),
+			new MiddlescrollOption("Sets the strumline to the middle of the screen and hides the opponent's."),
+			new NoteSplashOption("When enabled, you'll see a splash when you hit a 'sick'. (NOT FUNCTIONAL YET)"),
 			new AccuracyOption("Display accuracy information."),
 			new NPSDisplayOption("Shows your current Notes Per Second."),
 			new SongPositionOption("Show the songs current position (as a bar)"),
@@ -101,7 +101,7 @@ class OptionsMenu extends MusicBeatState
 
 		currentDescription = "none";
 
-		versionShit = new FlxText(5, FlxG.height + 40, 0, "Offset (Left, Right, Shift for slow): " + HelperFunctions.truncateFloat(FlxG.save.data.offset,2) + " - Description - " + currentDescription, 12);
+		versionShit = new FlxText(5, FlxG.height + 40, 0, "Description - " + currentDescription, 12); // Fuck that useless offset shit text
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		
@@ -188,7 +188,7 @@ class OptionsMenu extends MusicBeatState
 				if (currentSelectedCat.getOptions()[curSelected].getAccept())
 					versionShit.text =  currentSelectedCat.getOptions()[curSelected].getValue() + " - Description - " + currentDescription;
 				else
-					versionShit.text = "Offset (Left, Right, Shift for slow): " + HelperFunctions.truncateFloat(FlxG.save.data.offset,2) + " - Description - " + currentDescription;
+					versionShit.text = "Description - " + currentDescription;
 			}
 			else
 			{
@@ -266,10 +266,10 @@ class OptionsMenu extends MusicBeatState
 			if (currentSelectedCat.getOptions()[curSelected].getAccept())
 				versionShit.text =  currentSelectedCat.getOptions()[curSelected].getValue() + " - Description - " + currentDescription;
 			else
-				versionShit.text = "Offset (Left, Right, Shift for slow): " + HelperFunctions.truncateFloat(FlxG.save.data.offset,2) + " - Description - " + currentDescription;
+				versionShit.text = "Description - " + currentDescription;
 		}
 		else
-			versionShit.text = "Offset (Left, Right, Shift for slow): " + HelperFunctions.truncateFloat(FlxG.save.data.offset,2) + " - Description - " + currentDescription;
+			versionShit.text = "Description - " + currentDescription;
 		// selector.y = (70 * curSelected) + 30;
 
 		var bullShit:Int = 0;

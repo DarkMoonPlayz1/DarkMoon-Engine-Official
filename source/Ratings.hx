@@ -4,36 +4,38 @@ class Ratings
 {
     public static function GenerateLetterRank(accuracy:Float)
     {
-        var ranking:String = "";
+        var ranking:String = "N/A";
 		if(FlxG.save.data.botplay)
-			ranking = "BotPlay";
+			ranking = "N/A";
 
         if (PlayState.misses == 0 && PlayState.bads == 0 && PlayState.shits == 0 && PlayState.goods == 0)
-            ranking = "FC";
+            ranking = "S";
         else if (PlayState.misses == 0 && PlayState.bads == 0 && PlayState.shits == 0 && PlayState.goods >= 1)
-            ranking = "FC";
+            ranking = "A+";
         else if (PlayState.misses == 0)
-            ranking = "FC";
-
-        // WIFE TIME :)))) (based on Wife3)
+            ranking = "A";
+        else if (PlayState.misses < 10)
+            ranking = "COMBO BROKEN";
+        else
+            ranking = "F";
 
         var wifeConditions:Array<Bool> = [
-            accuracy >= 99.9935, // AAAAA
-            accuracy >= 99.980, // AAAA:
-            accuracy >= 99.970, // AAAA.
-            accuracy >= 99.955, // AAAA
-            accuracy >= 99.90, // AAA:
-            accuracy >= 99.80, // AAA.
-            accuracy >= 99.70, // AAA
-            accuracy >= 99, // AA:
-            accuracy >= 96.50, // AA.
-            accuracy >= 93, // AA
-            accuracy >= 90, // A:
-            accuracy >= 85, // A.
-            accuracy >= 80, // A
-            accuracy >= 70, // B
-            accuracy >= 60, // C
-            accuracy < 60 // D
+            accuracy >= 99.9935,
+            accuracy >= 99.980,
+            accuracy >= 99.970,
+            accuracy >= 99.955,
+            accuracy >= 99.90,
+            accuracy >= 99.80,
+            accuracy >= 99.70,
+            accuracy >= 99,
+            accuracy >= 96.50,
+            accuracy >= 93,
+            accuracy >= 90,
+            accuracy >= 85,
+            accuracy >= 80,
+            accuracy >= 70,
+            accuracy >= 60,
+            accuracy < 60
         ];
 
         for(i in 0...wifeConditions.length)
@@ -44,55 +46,51 @@ class Ratings
                 switch(i)
                 {
                     case 0:
-                        ranking += " ";
+                        ranking += "";
                     case 1:
-                        ranking += " ";
+                        ranking += "";
                     case 2:
-                        ranking += " ";
+                        ranking += "";
                     case 3:
-                        ranking += " ";
+                        ranking += "";
                     case 4:
-                        ranking += " ";
+                        ranking += "";
                     case 5:
-                        ranking += " ";
+                        ranking += "";
                     case 6:
-                        ranking += " ";
+                        ranking += "";
                     case 7:
-                        ranking += " ";
+                        ranking += "";
                     case 8:
                         ranking += " ";
                     case 9:
-                        ranking += " ";
+                        ranking += "";
                     case 10:
-                        ranking += " ";
+                        ranking += "";
                     case 11:
-                        ranking += " ";
+                        ranking += "";
                     case 12:
-                        ranking += " ";
+                        ranking += "";
                     case 13:
-                        ranking += " ";
+                        ranking += "";
                     case 14:
-                        ranking += " ";
+                        ranking += "";
                     case 15:
-                        ranking += " ";
+                        ranking += "";
                 }
                 break;
             }
         }
 
-        if (PlayState.misses == 0 && accuracy == 0)
-            ranking = "FC";
-        if (PlayState.misses >= 1 && accuracy <= 75)
-            ranking = "BAD";
-        if (PlayState.misses == 0 && accuracy <= 96)    
-            ranking = "A";
+        if (accuracy == 0)
+            ranking = "N/A";
 		else if(FlxG.save.data.botplay)
-			ranking = "BotPlay";
+			ranking = "N/A";
 
         return ranking;
     }
     
-    public static function CalculateRating(noteDiff:Float, ?customSafeZone:Float):String
+    public static function CalculateRating(noteDiff:Float, ?customSafeZone:Float):String // Generate a judgement through some timing shit
     {
 
         var customTimeScale = Conductor.timeScale;
@@ -102,37 +100,27 @@ class Ratings
 
         // trace(customTimeScale + ' vs ' + Conductor.timeScale);
 
-        // trace('Hit Info\nDifference: ' + noteDiff + '\nZone: ' + Conductor.safeZoneOffset * 1.5 + "\nTS: " + customTimeScale + "\nLate: " + 155 * customTimeScale);
-
 	if (FlxG.save.data.botplay)
 	    return "sick";
 	    
-        if (noteDiff > 166 * customTimeScale) // so god damn early its a miss
+        if (noteDiff > 166 * customTimeScale)
             return "miss";
-        if (noteDiff > 135 * customTimeScale) // way early
+        if (noteDiff > 135 * customTimeScale)
             return "shit";
-        else if (noteDiff > 90 * customTimeScale) // early
+        else if (noteDiff > 90 * customTimeScale)
             return "bad";
-        else if (noteDiff > 45 * customTimeScale) // your kinda there
+        else if (noteDiff > 45 * customTimeScale)
             return "good";
-        else if (noteDiff < -45 * customTimeScale) // little late
+        else if (noteDiff < -45 * customTimeScale)
             return "good";
-        else if (noteDiff < -90 * customTimeScale) // late
+        else if (noteDiff < -90 * customTimeScale)
             return "bad";
-        else if (noteDiff < -135 * customTimeScale) // late as fuck
+        else if (noteDiff < -135 * customTimeScale)
             return "shit";
-        else if (noteDiff < -166 * customTimeScale) // so god damn late its a miss
+        else if (noteDiff < -166 * customTimeScale)
             return "miss";
         return "sick";
     }
 
-    public static function CalculateRanking(score:Int,scoreDef:Int,nps:Int,maxNPS:Int,accuracy:Float):String
-    {
-        return 
-        (FlxG.save.data.npsDisplay ? "NPS: " + nps + " (Max " + maxNPS + ")" + (!FlxG.save.data.botplay ? " | " : "") : "") + (!FlxG.save.data.botplay ?	// NPS Toggle
-        "Score:" + (Conductor.safeFrames != 10 ? score + " (" + scoreDef + ")" : "" + score) + 									// Score
-        " | Misses:" + PlayState.misses + 																				// Misses/Combo Breaks
-        " | Accuracy:" + (FlxG.save.data.botplay ? "N/A" : HelperFunctions.truncateFloat(accuracy, 2) + "%") +  				// Accuracy
-        " | " + GenerateLetterRank(accuracy) : ""); 																			// Letter Rank
-    }
+
 }

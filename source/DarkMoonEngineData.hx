@@ -13,6 +13,9 @@ class DarkMoonEngineData
 
 		if (FlxG.save.data.dfjk == null)
 			FlxG.save.data.dfjk = false;
+
+		if (FlxG.save.data.noteSplash == null)
+			FlxG.save.data.noteSplash = false;			
 			
 		if (FlxG.save.data.accuracyDisplay == null)
 			FlxG.save.data.accuracyDisplay = true;

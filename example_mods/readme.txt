@@ -1,2 +1,1 @@
-THIS MOD FOLDER DOES NOT ENTIRELY WORK JUST YET!!!
-DONT EXPECT MUCH OUT OF IT RIGHT NOW!!!
+This mod folder doesn't entirely work just yet, wait until V2 for the mods folder support update

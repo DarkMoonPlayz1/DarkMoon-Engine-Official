@@ -310,6 +310,7 @@ class NoteSplashOption extends Option
 		super();
 		description = desc;
 	}
+
 	public override function press():Bool
 	{
 		FlxG.save.data.noteSplash = !FlxG.save.data.noteSplash;
@@ -319,7 +320,7 @@ class NoteSplashOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Note Splash: " + (!FlxG.save.data.noteSplash ? "off" : "on");
+		return "Note Splashes " + (!FlxG.save.data.noteSplash ? "off" : "on");
 	}
 }
 
@@ -465,29 +466,6 @@ class ScrollSpeedOption extends Option
 			FlxG.save.data.scrollSpeed = 4;
 
 		return true;
-	}
-}
-
-
-class RainbowFPSOption extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc;
-	}
-
-	public override function press():Bool
-	{
-		FlxG.save.data.fpsRain = !FlxG.save.data.fpsRain;
-		(cast (Lib.current.getChildAt(0), Main)).changeFPSColor(FlxColor.WHITE);
-		display = updateDisplay();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "FPS Rainbow " + (!FlxG.save.data.fpsRain ? "off" : "on");
 	}
 }
 

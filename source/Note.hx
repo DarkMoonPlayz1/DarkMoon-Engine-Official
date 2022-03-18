@@ -47,14 +47,13 @@ class Note extends FlxSprite
 
 	public var noteYOff:Int = 0;
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?noteType:String = 'normal', ?inCharter, ?noteSkin:String = 'normal')
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?noteType:String = 'normal', ?inCharter, ?noteSkin:String = 'normal', ?noteType:Int = 0)
 	{
 		super();
 
-		if (prevNote == null)
+		if (prevNote == null)	
 			prevNote = this;
-
-		this.prevNote = prevNote;
+		this.prevNote = prevNote; 
 		isSustainNote = sustainNote;
 
 		x += 50;
