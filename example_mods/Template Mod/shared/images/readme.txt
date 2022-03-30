@@ -1,0 +1,1 @@
+Put your images that can work on the shared folder

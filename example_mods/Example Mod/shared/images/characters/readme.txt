@@ -1,1 +1,0 @@
-Put your custom character image and .xml files here

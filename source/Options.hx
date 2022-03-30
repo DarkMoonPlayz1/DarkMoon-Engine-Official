@@ -303,25 +303,26 @@ class ResetButtonOption extends Option
 	}
 }
 
-class NoteSplashOption extends Option
+class NoteSplashesOption extends Option
 {
-	public function new(desc:String)
-	{
-		super();
-		description = desc;
-	}
+    public function new(desc:String)
+    {
+        super();
+        description = desc;
+    }
 
-	public override function press():Bool
-	{
-		FlxG.save.data.noteSplash = !FlxG.save.data.noteSplash;
-		display = updateDisplay();
-		return true;
-	}
+    public override function press():Bool
+    {
+        FlxG.save.data.noteSplashes = !FlxG.save.data.noteSplashes;
 
-	private override function updateDisplay():String
-	{
-		return "Note Splashes " + (!FlxG.save.data.noteSplash ? "off" : "on");
-	}
+        display = updateDisplay();
+        return true;
+    }
+
+    private override function updateDisplay():String
+    {
+        return "Note Splashes " + (FlxG.save.data.noteSplashes ? "on" : "off");
+    }
 }
 
 class FlashingLightsOption extends Option

@@ -1,0 +1,1 @@
+Put your custom opponent notes here [player notes are not avaliable yet]

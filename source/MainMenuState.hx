@@ -28,7 +28,7 @@ class MainMenuState extends MusicBeatState
 	var menuItems:FlxTypedGroup<FlxSprite>;
 
 	#if !switch
-	var optionShit:Array<String> = ['story mode', 'freeplay', 'twitter', 'options'];
+	var optionShit:Array<String> = ['story mode', 'freeplay', 'twitter', 'mods', 'options'];
 	#else
 	var optionShit:Array<String> = ['story mode', 'freeplay'];
 	#end
@@ -39,7 +39,7 @@ class MainMenuState extends MusicBeatState
 
 	public static var nightly:String = "";
 
-	public static var darkmoonEngineVer:String = "1.5" + nightly;
+	public static var darkmoonEngineVer:String = "1.5.1" + nightly;
 	public static var gameVer:String = "";
 
 	var camFollow:FlxObject;

@@ -79,6 +79,7 @@ class PlayState extends MusicBeatState
 	public static var bads:Int = 0;
 	public static var goods:Int = 0;
 	public static var sicks:Int = 0;
+	private var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 
 	public static var songPosBG:FlxSprite;
 	public static var songPosBar:FlxBar;
@@ -128,6 +129,7 @@ class PlayState extends MusicBeatState
 	public var health:Float = 1;
 	private var combo:Int = 0;
 	public static var misses:Int = 0;
+	public static var campaignMisses:Int = 0;
 	private var accuracy:Float = 0.00;
 	private var accuracyDefault:Float = 0.00;
 	private var totalNotesHit:Float = 0;
@@ -322,6 +324,7 @@ class PlayState extends MusicBeatState
 		
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD);
+		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
 
 		FlxCamera.defaultCameras = [camGame];
 
@@ -880,6 +883,17 @@ class PlayState extends MusicBeatState
 
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
+		add(grpNoteSplashes);
+		if (FlxG.save.data.noteSplashes)
+        {
+            var splashTest:NoteSplash = new NoteSplash(-700, 100, 0);
+            grpNoteSplashes.add(splashTest);
+        }
+		if (FlxG.save.data.noteSplashes)
+		{
+   		 	var splashTest:NoteSplash = new NoteSplash(-700, 100, 0);
+    		grpNoteSplashes.add(splashTest);
+		}
 
 		playerStrums = new FlxTypedGroup<FlxSprite>();
 		cpuStrums = new FlxTypedGroup<FlxSprite>();
@@ -1070,6 +1084,7 @@ class PlayState extends MusicBeatState
 		iconP2.animation.curAnim.curFrame = 0;
 
 		strumLineNotes.cameras = [camHUD];
+		grpNoteSplashes.cameras = [camHUD];
 		notes.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
 		healthBarBG.cameras = [camHUD];
@@ -1948,9 +1963,9 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
-		scoreTxt.text = "Score:" + songScore + " // Misses:" + misses + " // Accuracy:" + HelperFunctions.truncateFloat(accuracy, 2) + "% // Health:" + Math.round(health * 50) + "% // " + Ratings.GenerateLetterRank(accuracy);
-		if (!FlxG.save.data.accuracyDisplay)
-			scoreTxt.text = "Score:" + songScore + " // Misses:" + misses + " // Accuracy:" + HelperFunctions.truncateFloat(accuracy, 2) + "% // " + Ratings.GenerateLetterRank(accuracy);
+		scoreTxt.text = Ratings.CalculateRanking(songScore,songScoreDef,nps,maxNPS,accuracy);
+
+		var lengthInPx = scoreTxt.textField.length * scoreTxt.frameHeight;
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 		{
@@ -1986,8 +2001,8 @@ class PlayState extends MusicBeatState
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
 		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
 
-		iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.90)));
-		iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.90)));
+		iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.95)));
+		iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.95)));
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
@@ -2431,6 +2446,7 @@ class PlayState extends MusicBeatState
 								else
 									daNote.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y - 0.45 * (Conductor.songPosition - daNote.strumTime) * FlxMath.roundDecimal(FlxG.save.data.scrollSpeed == 1 ? SONG.speed : FlxG.save.data.scrollSpeed, 2));
 								if(daNote.isSustainNote)
+
 								{
 									daNote.y -= daNote.height / 2;
 	
@@ -2810,7 +2826,7 @@ class PlayState extends MusicBeatState
 
 			switch(daRating)
 			{
-				case 'shit':
+				case 'shit':				
 					score = -300;
 					combo = 0;
 					misses++;
@@ -2819,7 +2835,7 @@ class PlayState extends MusicBeatState
 					shits++;
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 0.25;
-				case 'bad':
+				case 'bad':				
 					daRating = 'bad';
 					score = 0;
 					health -= 0.06;
@@ -2827,7 +2843,7 @@ class PlayState extends MusicBeatState
 					bads++;
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 0.50;
-				case 'good':
+				case 'good':				
 					daRating = 'good';
 					score = 200;
 					ss = false;
@@ -2836,39 +2852,21 @@ class PlayState extends MusicBeatState
 						health += 0.04;
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 0.75;
-				case 'sick':
+				case 'sick':			
 					if (health < 2)
 						health += 0.04;
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 1;
 					sicks++;
-				var sploosh:FlxSprite = new FlxSprite(daNote.x, playerStrums.members[daNote.noteData].y); //da note splooshes code because why not
-				if (!curStage.startsWith('schoolEvilB'))
+				if (FlxG.save.data.noteSplashes)
 				{
-					var tex:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('noteSplashes', 'shared');
-					sploosh.frames = tex;
-					sploosh.animation.addByPrefix('splash 0 0', 'note impact 1 purple', 24, false);
-					sploosh.animation.addByPrefix('splash 0 1', 'note impact 1  blue', 24, false);
-					sploosh.animation.addByPrefix('splash 0 2', 'note impact 1 green', 24, false);
-					sploosh.animation.addByPrefix('splash 0 3', 'note impact 1 red', 24, false);
-					sploosh.animation.addByPrefix('splash 1 0', 'note impact 2 purple', 24, false);
-					sploosh.animation.addByPrefix('splash 1 1', 'note impact 2 blue', 24, false);
-					sploosh.animation.addByPrefix('splash 1 2', 'note impact 2 green', 24, false);
-					sploosh.animation.addByPrefix('splash 1 3', 'note impact 2 red', 24, false);
-					if (daRating == 'sick')
-					{
-						add(sploosh);
-						sploosh.cameras = [camHUD];
-						sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.noteData);
-						sploosh.alpha = 0.6;
-						sploosh.offset.x += 90;
-						sploosh.offset.y += 80;
-						sploosh.animation.finishCallback = function(name) sploosh.kill();
-					}
-				}									
+    				var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
+    				splash.setupNoteSplash(daNote.x, playerStrums.members[daNote.noteData].y, daNote.noteData);
+
+    				grpNoteSplashes.add(splash); // New notesplash code
+				}
+									
 	     }
-
-
 
 			if (daRating != 'shit' || daRating != 'bad')
 				{
@@ -3354,7 +3352,7 @@ class PlayState extends MusicBeatState
 	function updateAccuracy()
 	{
 		totalPlayed += 1;
-		accuracy = Math.max(0, totalNotesHit / totalPlayed * 100);
+		accuracy = Math.max(0,totalNotesHit / totalPlayed * 100);
 		accuracyDefault = Math.max(0, totalNotesHitDefault / totalPlayed * 100);
 
 		judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${misses}';

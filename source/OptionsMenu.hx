@@ -40,7 +40,7 @@ class OptionsMenu extends MusicBeatState
 			new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay."),
 			new DownscrollOption("Flips your HUD (Example: Arrows from top to bottom, health and accuracy from bottom to top)."),
 			new MiddlescrollOption("Sets the strumline to the middle of the screen and hides the opponent's."),
-			new NoteSplashOption("When enabled, you'll see a splash when you hit a 'sick'. (NOT FUNCTIONAL YET)"),
+			new NoteSplashesOption("When enabled, you'll see a splash when you hit a 'sick'."),
 			new AccuracyOption("Display accuracy information."),
 			new NPSDisplayOption("Shows your current Notes Per Second."),
 			new SongPositionOption("Show the songs current position (as a bar)"),
