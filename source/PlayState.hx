@@ -81,6 +81,8 @@ class PlayState extends MusicBeatState
 	public static var sicks:Int = 0;
 	private var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 
+	public static var effectSONG:SwagSong;
+
 	public static var songPosBG:FlxSprite;
 	public static var songPosBar:FlxBar;
 
