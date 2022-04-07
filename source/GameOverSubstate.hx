@@ -55,10 +55,12 @@ class GameOverSubstate extends MusicBeatSubstate
 		if (controls.ACCEPT)
 		{
 			endBullshit();
+			PlayState.blueballed += 1; // adds +1 everytime u die
 		}
 
 		if (controls.BACK)
 		{
+			PlayState.blueballed = 0; // resets counter whenever u hit the ESC key
 			FlxG.sound.music.stop();
 
 			if (PlayState.isStoryMode)

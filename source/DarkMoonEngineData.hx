@@ -1,11 +1,11 @@
-import openfl.Lib;
 import flixel.FlxG;
+import openfl.Lib;
 
 class DarkMoonEngineData
 {
-    public static function initSave()
-    {
-        if (FlxG.save.data.newInput == null)
+	public static function initSave()
+	{
+		if (FlxG.save.data.newInput == null)
 			FlxG.save.data.newInput = true;
 
 		if (FlxG.save.data.downscroll == null)
@@ -15,8 +15,8 @@ class DarkMoonEngineData
 			FlxG.save.data.dfjk = false;
 
 		if (FlxG.save.data.noteSplash == null)
-			FlxG.save.data.noteSplash = false;			
-			
+			FlxG.save.data.noteSplash = false;
+
 		if (FlxG.save.data.accuracyDisplay == null)
 			FlxG.save.data.accuracyDisplay = true;
 
@@ -32,7 +32,7 @@ class DarkMoonEngineData
 		if (FlxG.save.data.hitsounds == null)
 			FlxG.save.data.hitsounds = false;
 
-		if(FlxG.save.data.fullcombomode = null)
+		if (FlxG.save.data.fullcombomode = null)
 			FlxG.save.data.fullcombomode = false;
 
 		if (FlxG.save.data.fps == null)
@@ -53,7 +53,7 @@ class DarkMoonEngineData
 
 		if (FlxG.save.data.fpsCap > 285 || FlxG.save.data.fpsCap < 60)
 			FlxG.save.data.fpsCap = 120;
-		
+
 		if (FlxG.save.data.scrollSpeed == null)
 			FlxG.save.data.scrollSpeed = 1;
 
@@ -80,7 +80,7 @@ class DarkMoonEngineData
 
 		if (FlxG.save.data.resetButton == null)
 			FlxG.save.data.resetButton = false;
-		
+
 		if (FlxG.save.data.botplay == null)
 			FlxG.save.data.botplay = false;
 
@@ -89,7 +89,7 @@ class DarkMoonEngineData
 
 		if (FlxG.save.data.strumline == null)
 			FlxG.save.data.strumline = false;
-		
+
 		if (FlxG.save.data.customStrumLine == null)
 			FlxG.save.data.customStrumLine = 0;
 
@@ -98,7 +98,5 @@ class DarkMoonEngineData
 		KeyBinds.keyCheck();
 
 		Main.watermarks = FlxG.save.data.watermark;
-
-		(cast (Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 	}
 }

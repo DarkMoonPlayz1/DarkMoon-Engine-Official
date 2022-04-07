@@ -1,9 +1,5 @@
 package;
 
-import openfl.Lib;
-#if windows
-import llua.Lua;
-#end
 import Controls.Control;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -16,16 +12,21 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import openfl.Lib;
+#if windows
+import llua.Lua;
+#end
 
-class PauseSubState extends MusicBeatSubstate //removed the shitty offset text crap
+class PauseSubState extends MusicBeatSubstate // removed the shitty offset text crap
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
 	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Exit to menu'];
 	var curSelected:Int = 0;
 
+	public static var blueballed:Int = 0;
+
 	var pauseMusic:FlxSound;
-	
 
 	public function new(x:Float, y:Float)
 	{
@@ -56,28 +57,27 @@ class PauseSubState extends MusicBeatSubstate //removed the shitty offset text c
 		levelDifficulty.updateHitbox();
 		add(levelDifficulty);
 
-		var blueballedTxt:FlxText = new FlxText(20, 15 + 64, 0, "", 32);
-		blueballedTxt.text = "Blueballed: " + PlayState.deathCounter;
-		blueballedTxt.scrollFactor.set();
-		blueballedTxt.setFormat(Paths.font('vcr.ttf'), 32);
-		blueballedTxt.updateHitbox();
-		add(blueballedTxt);
+		var blueballed:FlxText = new FlxText(20, 15 + 64, 0, "Blue Balled: " + PlayState.blueballed, 32);
+		blueballed.scrollFactor.set();
+		blueballed.setFormat(Paths.font('vcr.ttf'), 32);
+		blueballed.updateHitbox();
+		add(blueballed);
 
-		blueballedTxt.alpha = 0;
+		blueballed.alpha = 0;
 		levelDifficulty.alpha = 0;
 		levelInfo.alpha = 0;
 
 		levelInfo.x = FlxG.width - (levelInfo.width + 20);
 		levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
-		blueballedTxt.x = FlxG.width - (blueballedTxt.width + 20);
+		blueballed.x = FlxG.width - (blueballed.width + 20);
 
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 		FlxTween.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
 		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
+		FlxTween.tween(blueballed, {alpha: 1, y: blueballed.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
 
 		grpMenuShit = new FlxTypedGroup<Alphabet>();
 		add(grpMenuShit);
-		
 
 		for (i in 0...menuItems.length)
 		{
@@ -109,8 +109,8 @@ class PauseSubState extends MusicBeatSubstate //removed the shitty offset text c
 		if (upP)
 		{
 			changeSelection(-1);
-   
-		}else if (downP)
+		}
+		else if (downP)
 		{
 			changeSelection(1);
 		}
@@ -126,12 +126,13 @@ class PauseSubState extends MusicBeatSubstate //removed the shitty offset text c
 				case "Restart Song":
 					FlxG.resetState();
 				case "Exit to menu":
-					if(PlayState.loadRep)
+					if (PlayState.loadRep)
 					{
 						FlxG.save.data.botplay = false;
 						FlxG.save.data.scrollSpeed = 1;
 						FlxG.save.data.downscroll = false;
 					}
+					PlayState.blueballed = 0; // resets counter whenever u go press the exit menu
 					PlayState.loadRep = false;
 					#if windows
 					if (PlayState.luaModchart != null)
@@ -141,8 +142,8 @@ class PauseSubState extends MusicBeatSubstate //removed the shitty offset text c
 					}
 					#end
 					if (FlxG.save.data.fpsCap > 290)
-						(cast (Lib.current.getChildAt(0), Main)).setFPSCap(290);
-					
+						(cast(Lib.current.getChildAt(0), Main)).setFPSCap(290);
+
 					FlxG.switchState(new MainMenuState());
 			}
 		}

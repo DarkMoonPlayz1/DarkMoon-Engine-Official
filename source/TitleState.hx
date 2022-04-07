@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.FlxTransitionableState;
@@ -23,17 +24,15 @@ import flixel.util.FlxTimer;
 import io.newgrounds.NG;
 import lime.app.Application;
 import openfl.Assets;
-import flixel.addons.display.FlxBackdrop;
+
+using StringTools;
 
 #if windows
 import Discord.DiscordClient;
 #end
-
 #if cpp
 import sys.thread.Thread;
 #end
-
-using StringTools;
 
 class TitleState extends MusicBeatState
 {
@@ -51,7 +50,6 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
-		
 		#if sys
 		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
 			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
@@ -61,16 +59,16 @@ class TitleState extends MusicBeatState
 		{
 			trace("Loaded " + openfl.Assets.getLibrary("default").assetsLoaded + " assets (DEFAULT)");
 		}
-		
+
 		PlayerSettings.init();
 
 		#if windows
 		DiscordClient.initialize();
 
-		Application.current.onExit.add (function (exitCode) {
+		Application.current.onExit.add(function(exitCode)
+		{
 			DiscordClient.shutdown();
-		 });
-		 
+		});
 		#end
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
@@ -123,7 +121,7 @@ class TitleState extends MusicBeatState
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
 	var bg:FlxSprite;
-	
+
 	function startIntro()
 	{
 		if (!initialized)
@@ -156,7 +154,7 @@ class TitleState extends MusicBeatState
 		Conductor.changeBPM(102);
 		persistentUpdate = true;
 
-		bg = new FlxSprite().loadGraphic(Paths.image('cityTitleScreen', 'shared')); //YEAH HERE WE FUCKING GO
+		bg = new FlxSprite().loadGraphic(Paths.image('cityTitleScreen', 'shared')); // YEAH HERE WE FUCKING GO
 		bg.antialiasing = true;
 		bg.updateHitbox();
 		add(bg);
@@ -300,18 +298,15 @@ class TitleState extends MusicBeatState
 			FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
 
 			transitioning = true;
-			// FlxG.sound.music.stop();
 
 			MainMenuState.firstStart = true;
 			FlxG.switchState(new MainMenuState());
-			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
 
 		if (pressedEnter && !skippedIntro && initialized)
 		{
 			skipIntro();
 		}
-
 		super.update(elapsed);
 	}
 
@@ -360,10 +355,9 @@ class TitleState extends MusicBeatState
 		FlxG.log.add(curBeat);
 		super.beatHit();
 
-		FlxTween.tween(FlxG.camera, {zoom:1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD}); //FUCKING TITLE SCREEN ZOOMS
-		logoBl.animation.play('bump',true);
+		FlxTween.tween(FlxG.camera, {zoom: 1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD}); // FUCKING TITLE SCREEN ZOOMS
+		logoBl.animation.play('bump', true);
 		FlxG.log.add(curBeat);
-
 
 		switch (curBeat)
 		{

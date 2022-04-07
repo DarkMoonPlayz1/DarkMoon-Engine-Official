@@ -4,7 +4,7 @@ A usual Friday Night Funkin' engine with new stuff in it such as improved input 
 BUILDING INSTRUCTIONS BELOW ↓↓
 
 Installing The Required Programs:
-- Haxe 4.1.5 (https://haxe.org/download/version/4.1.5/)
+- Haxe 4.2.4 (https://haxe.org/download/version/4.2.4/)
 - HaxeFlixel (https://haxeflixel.com/documentation/install-haxeflixel/)
 - VS Community 2019
 - VS Code (optional)
