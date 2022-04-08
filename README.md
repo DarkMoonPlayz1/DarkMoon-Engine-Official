@@ -1,4 +1,4 @@
-A usual Friday Night Funkin' engine with new stuff in it such as improved input system, ghost tapping, accuracy, and more.
+A usual Friday Night Funkin' engine with new stuff in it such as new inputs, ghost tapping, accuracy, and more.
 
 
 BUILDING INSTRUCTIONS BELOW ↓↓
@@ -25,8 +25,11 @@ Installing and Setup The Nessecary Libraries (open powershell or command prompt 
 
 Installing Gits:
 - Install git-scm (https://git-scm.com/downloads) 
-- haxelib git polymod https://github.com/larsiusprime/polymod.git
+- haxelib git polymod https://github.com/MasterEric/polymod.git
 - haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+- haxelib git faxe https://github.com/uhrobots/faxe
+- haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
+- haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
 - haxelib git faxe https://github.com/uhrobots/faxe
 
 Installing Individual Components for VS Community 2019 (Required) (WINDOWS ONLY):
@@ -53,7 +56,7 @@ Cloning The Repository:
 - git clone https://github.com/DarkMoonPlayz1/DarkMoon-Engine-Official.git
 
 Building Commands:
-- lime build <target> (Whichever platform you want to build: windows, mac, linux, html5)
-- You can find the build at DarkMoonEngine/export/release/<target>/bin including the <target> that you've build the code with
-- If you want to access debug mode, do lime build <target> -debug
-- You can find the debug version of the build by simply going to DarkMoonEngine/export/debug/<target>/bin
+- lime build [target] (Whichever platform you want to build: windows, mac, linux, html5)
+- You can find the build at DarkMoonEngine/export/release/[target]/bin including all the assets and an exe file that you've build the code with
+- If you want to access debug mode, do lime test windows -debug
+- You can find the debug version of the build by simply going to DarkMoonEngine/export/debug/[target]/bin
