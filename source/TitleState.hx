@@ -86,7 +86,7 @@ class TitleState extends MusicBeatState
 
 		FlxG.save.bind('funkin', 'ninjamuffin99');
 
-		DarkMoonEngineData.initSave();
+		EngineData.initSave();
 
 		Highscore.load();
 
@@ -219,6 +219,8 @@ class TitleState extends MusicBeatState
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
 		FlxG.mouse.visible = false;
+
+		FlxGraphic.defaultPersist = FlxG.save.data.cacheImages;
 
 		if (initialized)
 			skipIntro();
@@ -355,7 +357,7 @@ class TitleState extends MusicBeatState
 		FlxG.log.add(curBeat);
 		super.beatHit();
 
-		FlxTween.tween(FlxG.camera, {zoom: 1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD}); // FUCKING TITLE SCREEN ZOOMS
+		// FlxTween.tween(FlxG.camera, {zoom: 1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD}); // FUCKING TITLE SCREEN ZOOMS
 		logoBl.animation.play('bump', true);
 		FlxG.log.add(curBeat);
 

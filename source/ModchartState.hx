@@ -1,4 +1,4 @@
-// this file is for modchart things, this is to declutter playstate.hx
+// Modchart system code ripped off from Kade Engine, Credits to Kade for the original code
 // LUA MY LOVE
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;

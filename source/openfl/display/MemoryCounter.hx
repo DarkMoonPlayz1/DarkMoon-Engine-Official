@@ -1,4 +1,4 @@
-package;
+package openfl.display;
 
 import flixel.FlxG;
 import haxe.Timer;
@@ -13,7 +13,7 @@ import openfl.system.System;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 
-class JloorFPSMem extends TextField
+class MemoryCounter extends TextField
 {
 	public var times:Array<Float>;
 

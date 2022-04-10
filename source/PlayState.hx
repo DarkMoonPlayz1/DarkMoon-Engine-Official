@@ -301,10 +301,6 @@ class PlayState extends MusicBeatState
 				storyDifficultyText = "Normal";
 			case 2:
 				storyDifficultyText = "Hard";
-			case 3:
-				storyDifficultyText = "Insane"; // New difficulty bullshit
-			case 4:
-				storyDifficultyText = "Erect"; // Yay Erect
 		}
 
 		iconRPC = SONG.player2;
@@ -2064,8 +2060,8 @@ class PlayState extends MusicBeatState
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
 		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
 
-		iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.95)));
-		iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.95)));
+		iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.80))); // Icon bounce
+		iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.80)));
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
@@ -2621,44 +2617,44 @@ class PlayState extends MusicBeatState
 					{
 						case 2:
 							dad.playAnim('singUP' + altAnim, true);
-							if (SONG.player2 == 'monster')
-							{
-								health -= 0.01;
-							}
-							if (SONG.player2 == 'monster-christmas')
-							{
-								health -= 0.01;
-							}
+						// if (SONG.player2 == 'monster')
+						// {
+						//	health -= 0.01;
+						// }
+						// if (SONG.player2 == 'monster-christmas')
+						// {
+						//	health -= 0.01;
+						// }
 						case 3:
 							dad.playAnim('singRIGHT' + altAnim, true);
-							if (SONG.player2 == 'monster')
-							{
-								health -= 0.01;
-							}
-							if (SONG.player2 == 'monster-christmas')
-							{
-								health -= 0.01;
-							}
+						// if (SONG.player2 == 'monster')
+						// {
+						//	health -= 0.01;
+						// }
+						// if (SONG.player2 == 'monster-christmas')
+						// {
+						//	health -= 0.01;
+						// }
 						case 1:
 							dad.playAnim('singDOWN' + altAnim, true);
-							if (SONG.player2 == 'monster')
-							{
-								health -= 0.01;
-							}
-							if (SONG.player2 == 'monster-christmas')
-							{
-								health -= 0.01;
-							}
+						// if (SONG.player2 == 'monster')
+						// {
+						//	health -= 0.01;
+						// }
+						// if (SONG.player2 == 'monster-christmas')
+						// {
+						//	health -= 0.01;
+						// }
 						case 0:
 							dad.playAnim('singLEFT' + altAnim, true);
-							if (SONG.player2 == 'monster')
-							{
-								health -= 0.01;
-							}
-							if (SONG.player2 == 'monster-christnas')
-							{
-								health -= 0.01;
-							}
+							// if (SONG.player2 == 'monster')
+							// {
+							//	health -= 0.01;
+							// }
+							// if (SONG.player2 == 'monster-christnas')
+							// {
+							//	health -= 0.01;
+							// }
 					}
 
 					if (FlxG.save.data.cpuStrums)
@@ -2696,10 +2692,10 @@ class PlayState extends MusicBeatState
 					notes.remove(daNote, true);
 					daNote.destroy();
 
-					if (dad.curCharacter == "spirit" && health > 0.04)
-					{
-						health -= 0.04;
-					}
+					// if (dad.curCharacter == "spirit" && health > 0.04)
+					// {
+					//	health -= 0.04;
+					// }
 				}
 
 				if (daNote.mustPress && !daNote.modifiedByLua)
@@ -2868,12 +2864,6 @@ class PlayState extends MusicBeatState
 
 					if (storyDifficulty == 2)
 						difficulty = '-hard';
-
-					if (storyDifficulty == 3)
-						difficulty = '-insane';
-
-					if (storyDifficulty == 4)
-						difficulty = '-erect';
 
 					trace('LOADING NEXT SONG');
 					// pre lowercasing the next story song name

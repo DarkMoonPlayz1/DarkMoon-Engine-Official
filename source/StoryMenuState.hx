@@ -13,11 +13,11 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.net.curl.CURLCode;
 
+using StringTools;
+
 #if windows
 import Discord.DiscordClient;
 #end
-
-using StringTools;
 
 class StoryMenuState extends MusicBeatState
 {
@@ -30,12 +30,11 @@ class StoryMenuState extends MusicBeatState
 		['Pico', 'Philly Nice', "Blammed"],
 		['Satin Panties', "High", "Milf"],
 		['Cocoa', 'Eggnog', 'Winter Horrorland'],
-		['Senpai', 'Roses', 'Thorns'],
-		['Dadbattle Erect', 'South Erect']
+		['Senpai', 'Roses', 'Thorns']
 	];
 	var curDifficulty:Int = 1;
 
-	public static var weekUnlocked:Array<Bool> = [true, true, true, true, true, true, true, true];
+	public static var weekUnlocked:Array<Bool> = [true, true, true, true, true, true, true];
 
 	var weekCharacters:Array<Dynamic> = [
 		['', 'bf', 'gf'],
@@ -147,8 +146,8 @@ class StoryMenuState extends MusicBeatState
 			}
 		}
 		trace("Line 96");
-		
-		weekSprites =  new FlxSprite(yellowBG.x, yellowBG.y).loadGraphic(Paths.image('weekBGs', 'shared'), true, 1280, 400);
+
+		weekSprites = new FlxSprite(yellowBG.x, yellowBG.y).loadGraphic(Paths.image('weekBGs', 'shared'), true, 1280, 400);
 		weekSprites.animation.add('week0', [0], 0, false);
 		weekSprites.animation.add('week1', [1], 0, false);
 		weekSprites.animation.add('week2', [2], 0, false);
@@ -179,8 +178,6 @@ class StoryMenuState extends MusicBeatState
 		sprDifficulty.animation.addByPrefix('easy', 'EASY');
 		sprDifficulty.animation.addByPrefix('normal', 'NORMAL');
 		sprDifficulty.animation.addByPrefix('hard', 'HARD');
-		sprDifficulty.animation.addByPrefix('insane', 'INSANE');
-		sprDifficulty.animation.addByPrefix('erect', 'ERECT');
 		sprDifficulty.animation.play('easy');
 		changeDifficulty();
 
@@ -308,15 +305,16 @@ class StoryMenuState extends MusicBeatState
 					diffic = '-easy';
 				case 2:
 					diffic = '-hard';
-                case 3:
-				    diffic = '-insane';
-                case 4:
-				    diffic = '-erect';
+				case 3:
+					diffic = '-insane';
+				case 4:
+					diffic = '-erect';
 			}
 
 			PlayState.storyDifficulty = curDifficulty;
 
-			PlayState.SONG = Song.loadFromJson(StringTools.replace(PlayState.storyPlaylist[0]," ", "-").toLowerCase() + diffic, StringTools.replace(PlayState.storyPlaylist[0]," ", "-").toLowerCase());
+			PlayState.SONG = Song.loadFromJson(StringTools.replace(PlayState.storyPlaylist[0], " ", "-").toLowerCase() + diffic,
+				StringTools.replace(PlayState.storyPlaylist[0], " ", "-").toLowerCase());
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
 			new FlxTimer().start(1, function(tmr:FlxTimer)

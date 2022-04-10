@@ -9,6 +9,7 @@ import openfl.Lib;
 import openfl.display.Application;
 import openfl.display.BlendMode;
 import openfl.display.FPS;
+import openfl.display.MemoryCounter;
 import openfl.display.Sprite;
 import openfl.display.StageScaleMode;
 import openfl.events.Event;

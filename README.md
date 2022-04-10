@@ -30,7 +30,6 @@ Installing Gits:
 - haxelib git faxe https://github.com/uhrobots/faxe
 - haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
 - haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
-- haxelib git faxe https://github.com/uhrobots/faxe
 
 Installing Individual Components for VS Community 2019 (Required) (WINDOWS ONLY):
 - MSVC v142 - VS 2019 C++ x64/x86 build tools
@@ -58,5 +57,5 @@ Cloning The Repository:
 Building Commands:
 - lime build [target] (Whichever platform you want to build: windows, mac, linux, html5)
 - You can find the build at DarkMoonEngine/export/release/[target]/bin including all the assets and an exe file that you've build the code with
-- If you want to access debug mode, do lime test windows -debug
+- If you want to access debug mode, do lime build [target] -debug
 - You can find the debug version of the build by simply going to DarkMoonEngine/export/debug/[target]/bin
