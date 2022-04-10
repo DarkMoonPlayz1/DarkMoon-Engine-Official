@@ -1465,7 +1465,7 @@ class PlayState extends MusicBeatState
 				- 1000);
 			songPosBar.numDivisions = 1000;
 			songPosBar.scrollFactor.set();
-			songPosBar.createFilledBar(FlxColor.BLACK, FlxColor.CYAN); // These colors are much better than Gray and Lime
+			songPosBar.createFilledBar(FlxColor.BLACK, FlxColor.PURPLE); // These colors are much better than Gray and Lime
 			add(songPosBar);
 
 			var songName = new FlxText(songPosBG.x + (songPosBG.width / 2) - 20, songPosBG.y, 0, SONG.song, 16);
@@ -3033,7 +3033,7 @@ class PlayState extends MusicBeatState
 			if (currentTimingShown != null)
 				remove(currentTimingShown);
 
-			currentTimingShown = new FlxText(0, 0, 0, "0ms");
+			currentTimingShown = new FlxText(0, 0, 0, "");
 			timeShown = 0;
 			switch (daRating)
 			{
@@ -3047,7 +3047,7 @@ class PlayState extends MusicBeatState
 			currentTimingShown.borderStyle = OUTLINE;
 			currentTimingShown.borderSize = 1;
 			currentTimingShown.borderColor = FlxColor.BLACK;
-			currentTimingShown.text = msTiming + "ms";
+			currentTimingShown.text = msTiming + "";
 			currentTimingShown.size = 20;
 
 			if (msTiming >= 0.03 && offsetTesting)
