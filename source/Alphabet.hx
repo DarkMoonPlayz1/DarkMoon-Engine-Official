@@ -1,12 +1,12 @@
 package;
 
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 
 using StringTools;
@@ -62,7 +62,6 @@ class Alphabet extends FlxSpriteGroup
 			{
 				addText();
 			}
-
 		}
 	}
 
@@ -233,7 +232,7 @@ class Alphabet extends FlxSpriteGroup
 
 			y = FlxMath.lerp(y, (scaledY * 120) + (FlxG.height * 0.48), 0.30);
 			x = FlxMath.lerp(x, (targetY * 20) + 90, 0.30);
-				screenCenter(X);
+			screenCenter(X);
 		}
 
 		super.update(elapsed);

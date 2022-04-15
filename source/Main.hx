@@ -1,19 +1,19 @@
 package;
 
+import FPS_Mem.FPSMem;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
 import flixel.util.FlxColor;
+import lime.app.Application;
 import openfl.Assets;
 import openfl.Lib;
-import openfl.display.Application;
-import openfl.display.BlendMode;
 import openfl.display.FPS;
-import openfl.display.MemoryCounter;
 import openfl.display.Sprite;
-import openfl.display.StageScaleMode;
 import openfl.events.Event;
-import openfl.text.TextFormat;
+#if desktop
+import Discord.DiscordClient;
+#end
 
 class Main extends Sprite
 {
@@ -21,19 +21,21 @@ class Main extends Sprite
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var initialState:Class<FlxState> = TitleState; // The FlxState the game starts with.
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
-	var framerate:Int = 180; // How many frames per second the game should run at.
+	var framerate:Int = 120; // How many frames per second the game should run at.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 
 	public static var watermarks = true;
-	public static var fpsVar:FPS;
+	public static var fps_mem:FPSMem;
+
+	public static var discordRPC:Bool = false;
+
+	var playState:Bool = false;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
 	public static function main():Void
 	{
-		// quick checks
-
 		Lib.current.addChild(new Main());
 	}
 
@@ -78,31 +80,38 @@ class Main extends Sprite
 		#if !debug
 		initialState = TitleState;
 		#end
+		#if desktop
+		DiscordClient.initialize();
 
-		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
+		Application.current.onExit.add(function(exitCode)
+		{
+			DiscordClient.shutdown();
+		});
+		#end
 
-		addChild(game);
+		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
 
 		#if !mobile
-		fpsVar = new FPS(10, 3, 0xFFFFFF);
-		addChild(fpsVar);
-		Lib.current.stage.align = "tl";
-		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+		// addChild(new FPS(10, 10, 0xFFFFFF));
+		fps_mem = new FPSMem(10, 10, 0xffffff, true);
+		addChild(fps_mem);
+		fps_mem.visible = FlxG.save.data.performTxt;
 		#end
 	}
 
-	var game:FlxGame;
-
-	var fpsCounter:FPS;
-
-	public function toggleFPS(fpsEnabled:Bool):Void
+	public function setFpsVisibility(fpsEnabled:Bool):Void
 	{
-		fpsCounter.visible = fpsEnabled;
+		fps_mem.visible = fpsEnabled;
+	}
+
+	public function isPlayState():Bool
+	{
+		return playState;
 	}
 
 	public function changeFPSColor(color:FlxColor)
 	{
-		fpsCounter.textColor = color;
+		fps_mem.textColor = color;
 	}
 
 	public function setFPSCap(cap:Float)
@@ -110,13 +119,13 @@ class Main extends Sprite
 		openfl.Lib.current.stage.frameRate = cap;
 	}
 
-	public function getFPSCap():Float
+	public function getFPSCap(value:Float)
 	{
-		return openfl.Lib.current.stage.frameRate;
+		openfl.Lib.current.stage.frameRate = value;
 	}
 
 	public function getFPS():Float
 	{
-		return fpsCounter.currentFPS;
+		return fps_mem.times.length;
 	}
 }

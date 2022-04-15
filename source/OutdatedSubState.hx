@@ -29,17 +29,17 @@ class OutdatedSubState extends MusicBeatState
 		bg.screenCenter();
 		add(bg);
 
-		var kadeLogo:FlxSprite = new FlxSprite(FlxG.width, 0).loadGraphic(Paths.image('KadeEngineLogo'));
-		kadeLogo.scale.y = 0.3;
-		kadeLogo.scale.x = 0.3;
-		kadeLogo.x -= kadeLogo.frameHeight;
-		kadeLogo.y -= 180;
-		kadeLogo.alpha = 0.8;
-		add(kadeLogo);
+		var logo:FlxSprite = new FlxSprite(FlxG.width, 0).loadGraphic(Paths.image('logoBumpin'));
+		logo.scale.y = 0.3;
+		logo.scale.x = 0.3;
+		logo.x -= logo.frameHeight;
+		logo.y -= 180;
+		logo.alpha = 0.8;
+		add(logo);
 
 		var txt:FlxText = new FlxText(0, 0, FlxG.width,
-			"Your Kade Engine is outdated!\nYou are on "
-			+ MainMenuState.kadeEngineVer
+			"Your version of DarkMoon Engine is outdated!\nYou are on "
+			+ MainMenuState.darkmoonEngineVer
 			+ "\nwhile the most recent version is "
 			+ needVer
 			+ "."
@@ -57,7 +57,7 @@ class OutdatedSubState extends MusicBeatState
 		add(txt);
 
 		FlxTween.color(bg, 2, bg.color, FlxColor.fromString(bgColors[colorRotation]));
-		FlxTween.angle(kadeLogo, kadeLogo.angle, -10, 2, {ease: FlxEase.quartInOut});
+		FlxTween.angle(logo, logo.angle, -10, 2, {ease: FlxEase.quartInOut});
 
 		new FlxTimer().start(2, function(tmr:FlxTimer)
 		{
@@ -68,33 +68,16 @@ class OutdatedSubState extends MusicBeatState
 				colorRotation = 0;
 		}, 0);
 
-		new FlxTimer().start(2, function(tmr:FlxTimer)
+		override function update(elapsed:Float)
 		{
-			if (kadeLogo.angle == -10)
-				FlxTween.angle(kadeLogo, kadeLogo.angle, 10, 2, {ease: FlxEase.quartInOut});
-			else
-				FlxTween.angle(kadeLogo, kadeLogo.angle, -10, 2, {ease: FlxEase.quartInOut});
-		}, 0);
-
-		new FlxTimer().start(0.8, function(tmr:FlxTimer)
-		{
-			if (kadeLogo.alpha == 0.8)
-				FlxTween.tween(kadeLogo, {alpha: 1}, 0.8, {ease: FlxEase.quartInOut});
-			else
-				FlxTween.tween(kadeLogo, {alpha: 0.8}, 0.8, {ease: FlxEase.quartInOut});
-		}, 0);
-	}
-
-	override function update(elapsed:Float)
-	{
-		if (controls.ACCEPT)
-		{
-			fancyOpenURL("https://kadedev.github.io/Kade-Engine/changelogs/changelog-" + needVer);
+			if (controls.ACCEPT)
+			{
+				fancyOpenURL("https://github.com/DarkMoonPlayz1/DarkMoon-Engine-Official/releases" + needVer);
+			}
+			if (controls.BACK)
+			{
+				leftState = true;
+				FlxG.switchState(new MainMenuState());
+			}
+			super.update(elapsed);
 		}
-		if (controls.BACK)
-		{
-			leftState = true;
-			FlxG.switchState(new MainMenuState());
-		}
-		super.update(elapsed);
-	}

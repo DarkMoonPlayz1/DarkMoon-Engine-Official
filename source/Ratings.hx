@@ -17,7 +17,7 @@ class Ratings
 		else if (PlayState.misses < 10)
 			ranking = "[SDCB]";
 		else
-			ranking = "(Clear)";
+			ranking = "[Clear]";
 
 		var wifeConditions:Array<Bool> = [
 			accuracy >= 99.9935, // S
@@ -112,7 +112,7 @@ class Ratings
 		return rating;
 	}
 
-	public static function checkRating(ms:Float, ts:Float)
+	public static function checkRating(ms:Float, ts:Float) // not too sure if these are the inputs
 	{
 		var rating = "sick";
 		if (ms <= 166 * ts && ms >= 135 * ts)

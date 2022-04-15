@@ -134,7 +134,7 @@ class CpuStrums extends Option
 
 	private override function updateDisplay():String
 	{
-		return FlxG.save.data.cpuStrums ? "Opponent Notes Light Up" : "No Opponent Notes Light Up";
+		return FlxG.save.data.cpuStrums ? "CPU Strums On" : "CPU Strums Off";
 	}
 }
 

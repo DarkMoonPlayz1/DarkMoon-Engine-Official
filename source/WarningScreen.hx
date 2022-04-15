@@ -16,7 +16,7 @@ import lime.app.Application;
 import Discord.DiscordClient;
 #end
 
-class SeizureWarnScreen extends MusicBeatState
+class WarningScreen extends MusicBeatState
 {
 	public static var alreadyWarned:Bool = false;
 	public static var leftState:Bool = false;

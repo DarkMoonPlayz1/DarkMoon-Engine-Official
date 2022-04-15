@@ -26,7 +26,7 @@ class OptionsMenu extends MusicBeatState
 	var options:Array<OptionCategory> = [
 		new OptionCategory("Ingame Modules", [
 			new DFJKOption(controls),
-			new GhostTapOption("You won't deal any damage and misses if this option is enabled."),
+			// new GhostTapOption("You won't deal any damage and misses if this option is enabled."),
 			new Judgement("Customize your Hit Timings (LEFT or RIGHT)"),
 			#if desktop
 			#end

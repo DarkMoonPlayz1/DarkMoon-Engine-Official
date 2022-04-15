@@ -1,4 +1,4 @@
-package openfl.display;
+package;
 
 import flixel.FlxG;
 import haxe.Timer;
@@ -13,7 +13,7 @@ import openfl.system.System;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 
-class MemoryCounter extends TextField
+class FPSMem extends TextField
 {
 	public var times:Array<Float>;
 
@@ -50,17 +50,9 @@ class MemoryCounter extends TextField
 		if (visible)
 		{
 			#if debug
-			text = "FPS: "
-				+ times.length
-				+ "\nMEM: "
-				+ mem
-				+ " MB\nMEM Peak: "
-				+ memPeak
-				+ " MB"
-				+ "\nDarkMoonEngine v1.6"
-				+ '\n[DEBUG MODE]';
+			text = "FPS: " + times.length + "\nMEM: " + mem + " MB\nMEM Peak: " + memPeak + " MB" + "\nDarkMoonEngine" + '\n[DEBUG MODE]';
 			#else
-			text = "FPS: " + times.length + "\nMEM: " + mem + " MB\nMEM Peak: " + memPeak + " MB" + "\nDarkMoonEngine v1.6";
+			text = "FPS: " + times.length + "\nMEM: " + mem + " MB\nMEM Peak: " + memPeak + " MB" + "\nDarkMoonEngine";
 			#end
 		}
 	}

@@ -1067,7 +1067,7 @@ class PlayState extends MusicBeatState
 			+ 50, 0,
 			SONG.song
 			+ " "
-			+ (Main.watermarks ? " - DarkMoonEngine " + MainMenuState.darkmoonEngineVer : ""), 16);
+			+ (Main.watermarks ? "// DarkMoonEngine " + MainMenuState.darkmoonEngineVer : ""), 16);
 		darkmoonEngineWatermark.setFormat(Paths.font("COMIC.TTF"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		darkmoonEngineWatermark.scrollFactor.set();
 		add(darkmoonEngineWatermark);
@@ -2091,7 +2091,7 @@ class PlayState extends MusicBeatState
 			FlxG.switchState(new Charting()); */
 
 		#if debug
-		if (FlxG.keys.justPressed.EIGHT)
+		if (FlxG.keys.justPressed.SIX)
 		{
 			FlxG.switchState(new AnimationDebug(SONG.player2));
 			#if windows
@@ -2972,12 +2972,12 @@ class PlayState extends MusicBeatState
 				ss = false;
 				goods++;
 				if (health < 2)
-					health += 0.04;
+					health += 0.004;
 				if (FlxG.save.data.accuracyMod == 0)
 					totalNotesHit += 0.75;
 			case 'sick':
 				if (health < 2)
-					health += 0.04;
+					health += 0.004;
 				if (FlxG.save.data.accuracyMod == 0)
 					totalNotesHit += 1;
 				sicks++;
