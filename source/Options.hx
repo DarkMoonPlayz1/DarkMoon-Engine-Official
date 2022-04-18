@@ -138,6 +138,27 @@ class CpuStrums extends Option
 	}
 }
 
+class FocusOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.focus = !FlxG.save.data.focus;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return 'Focus ' + (FlxG.save.data.focus ? "on" : "off");
+	}
+}
+
 class CustomizeGameplay extends Option
 {
 	public function new(desc:String)

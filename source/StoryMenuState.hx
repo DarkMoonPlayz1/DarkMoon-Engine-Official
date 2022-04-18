@@ -43,8 +43,7 @@ class StoryMenuState extends MusicBeatState
 		['pico', 'bf', 'gf'],
 		['mom', 'bf', 'gf'],
 		['parents-christmas', 'bf', 'gf'],
-		['senpai', 'bf', 'gf'],
-		['', 'bf', 'gf']
+		['senpai', 'bf', 'gf']
 	];
 
 	var weekNames:Array<String> = [
@@ -54,14 +53,12 @@ class StoryMenuState extends MusicBeatState
 		"PICO",
 		"MOMMY MUST MURDER",
 		"RED SNOW",
-		"Hating Simulator ft. Moawling",
-		"Erect Remixes"
+		"Hating Simulator ft. Moawling"
 	];
 
 	var txtWeekTitle:FlxText;
 
 	var curWeek:Int = 0;
-	var weekSprites:FlxSprite;
 
 	var txtTracklist:FlxText;
 
@@ -145,17 +142,8 @@ class StoryMenuState extends MusicBeatState
 				grpLocks.add(lock);
 			}
 		}
-		trace("Line 96");
 
-		weekSprites = new FlxSprite(yellowBG.x, yellowBG.y).loadGraphic(Paths.image('weekBGs', 'shared'), true, 1280, 400);
-		weekSprites.animation.add('week0', [0], 0, false);
-		weekSprites.animation.add('week1', [1], 0, false);
-		weekSprites.animation.add('week2', [2], 0, false);
-		weekSprites.animation.add('week3', [3], 0, false);
-		weekSprites.animation.add('week4', [4], 0, false);
-		weekSprites.animation.add('week5', [5], 0, false);
-		weekSprites.animation.add('week6', [6], 0, false);
-		weekSprites.antialiasing = true;
+		trace("Line 96");
 
 		grpWeekCharacters.add(new MenuCharacter(0, 100, 0.5, false));
 		grpWeekCharacters.add(new MenuCharacter(450, 25, 0.9, true));
@@ -178,6 +166,7 @@ class StoryMenuState extends MusicBeatState
 		sprDifficulty.animation.addByPrefix('easy', 'EASY');
 		sprDifficulty.animation.addByPrefix('normal', 'NORMAL');
 		sprDifficulty.animation.addByPrefix('hard', 'HARD');
+		sprDifficulty.animation.addByPrefix('insane', 'INSANE');
 		sprDifficulty.animation.play('easy');
 		changeDifficulty();
 
@@ -191,9 +180,9 @@ class StoryMenuState extends MusicBeatState
 		difficultySelectors.add(rightArrow);
 
 		trace("Line 150");
+
 		add(yellowBG);
 		add(grpWeekCharacters);
-		add(weekSprites);
 
 		txtTracklist = new FlxText(FlxG.width * 0.05, yellowBG.x + yellowBG.height + 100, 0, "Tracks", 32);
 		txtTracklist.alignment = CENTER;
@@ -307,8 +296,6 @@ class StoryMenuState extends MusicBeatState
 					diffic = '-hard';
 				case 3:
 					diffic = '-insane';
-				case 4:
-					diffic = '-erect';
 			}
 
 			PlayState.storyDifficulty = curDifficulty;
@@ -329,8 +316,8 @@ class StoryMenuState extends MusicBeatState
 		curDifficulty += change;
 
 		if (curDifficulty < 0)
-			curDifficulty = 4;
-		if (curDifficulty > 4)
+			curDifficulty = 3;
+		if (curDifficulty > 3)
 			curDifficulty = 0;
 
 		sprDifficulty.offset.x = 0;
@@ -348,9 +335,6 @@ class StoryMenuState extends MusicBeatState
 				sprDifficulty.offset.x = 20;
 			case 3:
 				sprDifficulty.animation.play('insane');
-				sprDifficulty.offset.x = 20;
-			case 4:
-				sprDifficulty.animation.play('erect');
 				sprDifficulty.offset.x = 20;
 		}
 
@@ -378,7 +362,6 @@ class StoryMenuState extends MusicBeatState
 			curWeek = 0;
 		if (curWeek < 0)
 			curWeek = weekData.length - 1;
-		weekSprites.animation.play('week' + curWeek);
 
 		var bullShit:Int = 0;
 

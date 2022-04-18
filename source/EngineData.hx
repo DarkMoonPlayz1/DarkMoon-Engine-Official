@@ -15,7 +15,7 @@ class EngineData
 			FlxG.save.data.dfjk = false;
 
 		if (FlxG.save.data.noteSplash == null)
-			FlxG.save.data.noteSplash = false;
+			FlxG.save.data.noteSplash = true;
 
 		if (FlxG.save.data.accuracyDisplay == null)
 			FlxG.save.data.accuracyDisplay = true;
@@ -78,8 +78,8 @@ class EngineData
 		if (FlxG.save.data.flashing == null)
 			FlxG.save.data.flashing = true;
 
-		if (FlxG.save.data.resetButton == null)
-			FlxG.save.data.resetButton = false;
+		if (FlxG.save.data.resetButton == null) // CUM
+			FlxG.save.data.resetButton = true;
 
 		if (FlxG.save.data.botplay == null)
 			FlxG.save.data.botplay = false;

@@ -4,7 +4,3 @@
 :dad:I'll beat you and make you take my place.
 :dad:You don't mind your bodies being borrowed right? It's only fair...
 :bf: beep bop ba skib de ba bop be boop skibby dop bop
-:dad: ...
-:dad: system add if(dad.curCharacter == "spirit" && health > 0.04){ then health -= 0.04;
-:bf: ????
-:dad: Good luck on this, you'll need it, also, try not to die.

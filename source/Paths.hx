@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 
@@ -55,7 +56,7 @@ class Paths
 		return getPath(file, type, library);
 	}
 
-	inline static public function lua(key:String,?library:String)
+	inline static public function lua(key:String, ?library:String)
 	{
 		return getPath('data/$key.lua', TEXT, library);
 	}
@@ -98,20 +99,26 @@ class Paths
 	inline static public function voices(song:String)
 	{
 		var songLowercase = StringTools.replace(song, " ", "-").toLowerCase();
-			switch (songLowercase) {
-				case 'dad-battle': songLowercase = 'dadbattle';
-				case 'philly-nice': songLowercase = 'philly';
-			}
+		switch (songLowercase)
+		{
+			case 'dad-battle':
+				songLowercase = 'dadbattle';
+			case 'philly-nice':
+				songLowercase = 'philly';
+		}
 		return 'songs:assets/songs/${songLowercase}/Voices.$SOUND_EXT';
 	}
 
 	inline static public function inst(song:String)
 	{
 		var songLowercase = StringTools.replace(song, " ", "-").toLowerCase();
-			switch (songLowercase) {
-				case 'dad-battle': songLowercase = 'dadbattle';
-				case 'philly-nice': songLowercase = 'philly';
-			}
+		switch (songLowercase)
+		{
+			case 'dad-battle':
+				songLowercase = 'dadbattle';
+			case 'philly-nice':
+				songLowercase = 'philly';
+		}
 		return 'songs:assets/songs/${songLowercase}/Inst.$SOUND_EXT';
 	}
 
@@ -138,5 +145,10 @@ class Paths
 	inline static public function video(key:String, ?library:String)
 	{
 		return getPath('videos/$key.mp4', BINARY, library);
-	}	
+	}
+
+	public static function loadImage(arg0:String, arg1:String):FlxGraphicAsset
+	{
+		throw new haxe.exceptions.NotImplementedException();
+	}
 }

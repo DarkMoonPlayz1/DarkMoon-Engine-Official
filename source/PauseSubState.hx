@@ -21,7 +21,9 @@ class PauseSubState extends MusicBeatSubstate // removed the shitty offset text 
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
-	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Exit to menu'];
+	var menuItems:Array<String> = ['Resume', 'Restart Song', 'BotPlay', 'Exit to menu'];
+
+	// var menuItems:Array<String> = ['Resume', 'Restart Song', 'BotPlay', 'Change KeyBinds', 'Exit to menu'];
 	var curSelected:Int = 0;
 
 	public static var blueballed:Int = 0;
@@ -125,6 +127,15 @@ class PauseSubState extends MusicBeatSubstate // removed the shitty offset text 
 					close();
 				case "Restart Song":
 					FlxG.resetState();
+				case 'BotPlay':
+					if (FlxG.save.data.botplay == null)
+						FlxG.save.data.botplay = true;
+					else
+						FlxG.save.data.botplay = !FlxG.save.data.botplay;
+
+					LoadingState.loadAndSwitchState(new PlayState());
+				// case 'Change KeyBinds':
+				// OptionsMenu.instance.openSubState(new KeyBindMenu());
 				case "Exit to menu":
 					if (PlayState.loadRep)
 					{

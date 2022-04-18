@@ -308,6 +308,7 @@ class ChartingState extends MusicBeatState
 		var gfVersions:Array<String> = CoolUtil.coolTextFile(Paths.txt('gfVersionList'));
 		var stages:Array<String> = CoolUtil.coolTextFile(Paths.txt('stageList'));
 		var noteStyles:Array<String> = CoolUtil.coolTextFile(Paths.txt('noteStyleList'));
+		var noteTypes:Array<String> = CoolUtil.coolTextFile(Paths.txt('noteTypeList'));
 
 		var player1DropDown = new FlxUIDropDownMenu(10, 100, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
 		{
@@ -349,6 +350,14 @@ class ChartingState extends MusicBeatState
 
 		var noteStyleLabel = new FlxText(10, 280, 64, 'Note Skin');
 
+		// var noteTypeDropDown = new FlxUIDropDownMenu(10, 300, FlxUIDropDownMenu.makeStrIdLabelArray(noteTypes, true), function(noteType:String)
+		// {
+		//	_song.noteType = noteTypes[Std.parseInt(noteType)];
+		// });
+		// noteTypeDropDown.selectedLabel = _song.noteType;
+
+		// var noteTypeLabel = new FlxText(10, 280, 64, 'Mechanics');
+
 		var tab_group_song = new FlxUI(null, UI_box);
 		tab_group_song.name = "Song";
 		tab_group_song.add(UI_songTitle);
@@ -380,6 +389,8 @@ class ChartingState extends MusicBeatState
 		tab_group_assets.name = "Assets";
 		tab_group_assets.add(noteStyleDropDown);
 		tab_group_assets.add(noteStyleLabel);
+		// tab_group_assets.add(noteTypeDropDown);
+		// tab_group_assets.add(noteTypeLabel);
 		tab_group_assets.add(gfVersionDropDown);
 		tab_group_assets.add(gfVersionLabel);
 		tab_group_assets.add(stageDropDown);

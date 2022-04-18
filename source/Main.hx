@@ -1,19 +1,19 @@
 package;
 
-import FPS_Mem.FPSMem;
+import MemoryCounter;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
 import flixel.util.FlxColor;
-import lime.app.Application;
 import openfl.Assets;
 import openfl.Lib;
+import openfl.display.Application;
+import openfl.display.BlendMode;
 import openfl.display.FPS;
 import openfl.display.Sprite;
+import openfl.display.StageScaleMode;
 import openfl.events.Event;
-#if desktop
-import Discord.DiscordClient;
-#end
+import openfl.text.TextFormat;
 
 class Main extends Sprite
 {
@@ -26,16 +26,14 @@ class Main extends Sprite
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 
 	public static var watermarks = true;
-	public static var fps_mem:FPSMem;
-
-	public static var discordRPC:Bool = false;
-
-	var playState:Bool = false;
+	public static var fpsVar:FPS;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
 	public static function main():Void
 	{
+		// quick checks
+
 		Lib.current.addChild(new Main());
 	}
 
@@ -80,38 +78,33 @@ class Main extends Sprite
 		#if !debug
 		initialState = TitleState;
 		#end
-		#if desktop
-		DiscordClient.initialize();
 
-		Application.current.onExit.add(function(exitCode)
-		{
-			DiscordClient.shutdown();
-		});
-		#end
+		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
 
-		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
+		addChild(game);
 
 		#if !mobile
-		// addChild(new FPS(10, 10, 0xFFFFFF));
-		fps_mem = new FPSMem(10, 10, 0xffffff, true);
-		addChild(fps_mem);
-		fps_mem.visible = FlxG.save.data.performTxt;
+		fpsVar = new FPS(10, 3, 0xFFFFFF);
+		addChild(fpsVar);
+		memoryCounter = new MemoryCounter(10, 3, 0xffffff);
+		addChild(memoryCounter);
+		Lib.current.stage.align = "tl";
+		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		#end
 	}
 
-	public function setFpsVisibility(fpsEnabled:Bool):Void
-	{
-		fps_mem.visible = fpsEnabled;
-	}
+	var game:FlxGame;
 
-	public function isPlayState():Bool
+	var fpsCounter:FPS;
+
+	public function toggleFPS(fpsEnabled:Bool):Void
 	{
-		return playState;
+		fpsCounter.visible = fpsEnabled;
 	}
 
 	public function changeFPSColor(color:FlxColor)
 	{
-		fps_mem.textColor = color;
+		fpsCounter.textColor = color;
 	}
 
 	public function setFPSCap(cap:Float)
@@ -119,13 +112,20 @@ class Main extends Sprite
 		openfl.Lib.current.stage.frameRate = cap;
 	}
 
-	public function getFPSCap(value:Float)
+	public function getFPSCap():Float
 	{
-		openfl.Lib.current.stage.frameRate = value;
+		return openfl.Lib.current.stage.frameRate;
+	}
+
+	public static var memoryCounter:MemoryCounter;
+
+	public static function toggleMem(memEnabled:Bool):Void
+	{
+		memoryCounter.visible = memEnabled;
 	}
 
 	public function getFPS():Float
 	{
-		return fps_mem.times.length;
+		return fpsCounter.currentFPS;
 	}
 }

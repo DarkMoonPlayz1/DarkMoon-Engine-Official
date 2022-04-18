@@ -78,7 +78,7 @@ class PlayState extends MusicBeatState
 	public static var bads:Int = 0;
 	public static var goods:Int = 0;
 	public static var sicks:Int = 0;
-	public static var blueballed:Int = 0; // DEATH COUNTER, I WIN!
+	public static var blueballed:Int = 0; // DEATH COUNTER, I WIN! ohwait-
 
 	private var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 
@@ -897,7 +897,7 @@ class PlayState extends MusicBeatState
 			FlxG.save.data.botplay = true;
 			FlxG.save.data.scrollSpeed = rep.replay.noteSpeed;
 			FlxG.save.data.downscroll = rep.replay.isDownscroll;
-			// FlxG.watch.addQuick('Queued',inputsQueued);
+			// FlxG.watch.addQuick('Queued', inputsQueued);
 		}
 
 		var doof:DialogueBox = new DialogueBox(false, dialogue);
@@ -910,6 +910,56 @@ class PlayState extends MusicBeatState
 
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
+
+		var focusdad:FlxSprite;
+		var focusbf:FlxSprite;
+		var focus:FlxSprite;
+
+		if (FlxG.save.data.focus)
+		{
+			focusbf = new FlxSprite().makeGraphic(FlxG.width - Std.parseInt('' + (FlxG.width * 0.63)), FlxG.height + 200, FlxColor.BLACK);
+			focusbf.screenCenter();
+			focusbf.x = 675;
+			focusbf.alpha = 0.77; // MAKE SURE THAT IT DOESN'T FULLY COVER BF??
+			focusbf.scrollFactor.set();
+			if (FlxG.save.data.focus && FlxG.save.data.midscroll)
+			{
+				focusbf.visible = false;
+			}
+
+			focusbf.cameras = [camHUD];
+			add(focusbf);
+
+			focusdad = new FlxSprite().makeGraphic(FlxG.width - Std.parseInt('' + (FlxG.width * 0.63)), FlxG.height + 200, FlxColor.BLACK);
+			focusdad.screenCenter();
+			focusdad.x = 40;
+			focusdad.alpha = 0.77; // MAKE SURE THAT IT DOESN'T FULLY COVER DAD??
+			focusdad.scrollFactor.set();
+			if (FlxG.save.data.focus && FlxG.save.data.midscroll)
+			{
+				focusdad.visible = false;
+			}
+
+			focusdad.cameras = [camHUD];
+			add(focusdad);
+
+			strumLine = new FlxSprite(-1000, 50).makeGraphic(FlxG.width, 10);
+			strumLine.scrollFactor.set();
+		}
+
+		if (FlxG.save.data.focus && FlxG.save.data.midscroll)
+		{
+			focus = new FlxSprite().makeGraphic(FlxG.width - Std.parseInt('' + (FlxG.width * 0.63)), FlxG.height + 200, FlxColor.BLACK);
+			focus.screenCenter();
+			focus.alpha = 0.77; // MAKE SURE THAT IT DOESN'T FULLY COVER YOUR ENTIRE SCREEN?
+			focus.scrollFactor.set();
+
+			focus.cameras = [camHUD];
+			add(focus);
+
+			strumLine = new FlxSprite(-1000, 50).makeGraphic(FlxG.width, 10);
+			strumLine.scrollFactor.set();
+		}
 
 		if (FlxG.save.data.downscroll)
 			strumLine.y = FlxG.height - 165;
@@ -1007,7 +1057,7 @@ class PlayState extends MusicBeatState
 					healthBar.createFilledBar(0xFFB8172F, 0xFF0091FF);
 					trace("GENERATED HEALTH BAR COLOURS.");
 				}
-			case 'bopeebo' | 'fresh' | 'dadbattle':
+			case 'bopeebo' | 'fresh' | 'dad battle':
 				{
 					healthBar.createFilledBar(0xFFC75EFF, 0xFF0091FF);
 					trace("GENERATED HEALTH BAR COLOURS.");
@@ -1042,16 +1092,6 @@ class PlayState extends MusicBeatState
 					healthBar.createFilledBar(0xFFFC3339, 0xFF0091FF);
 					trace("GENERATED HEALTH BAR COLOURS.");
 				}
-			case 'dadbattle erect':
-				{
-					healthBar.createFilledBar(0xFFC75EFF, 0xFF0091FF);
-					trace("GENERATED HEALTH BAR COLOURS.");
-				}
-			case 'south erect':
-				{
-					healthBar.createFilledBar(0xFFF99D27, 0xFF0091FF);
-					trace("GENERATED HEALTH BAR COLOURS.");
-				}
 			default: // in case it doesn't find the song for some reason (to prevent crashes)
 				{
 					// purple color  blue color (dad & bf)
@@ -1067,7 +1107,7 @@ class PlayState extends MusicBeatState
 			+ 50, 0,
 			SONG.song
 			+ " "
-			+ (Main.watermarks ? "// DarkMoonEngine " + MainMenuState.darkmoonEngineVer : ""), 16);
+			+ (Main.watermarks ? "// DarkMoonEngine " + MainMenuState.darkmoonEngineVer + MainMenuState.protoTypeVer : ""), 16);
 		darkmoonEngineWatermark.setFormat(Paths.font("COMIC.TTF"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		darkmoonEngineWatermark.scrollFactor.set();
 		add(darkmoonEngineWatermark);
@@ -1075,7 +1115,7 @@ class PlayState extends MusicBeatState
 		if (FlxG.save.data.downscroll)
 			darkmoonEngineWatermark.y = FlxG.height * 0.9 + 45;
 
-		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 20);
+		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 35, 0, "", 20);
 		if (!FlxG.save.data.accuracyDisplay)
 			scoreTxt.x = healthBarBG.x + healthBarBG.width / 2;
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -1125,11 +1165,11 @@ class PlayState extends MusicBeatState
 		strumLineNotes.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
 		notes.cameras = [camHUD];
+		scoreTxt.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
 		healthBarBG.cameras = [camHUD];
 		iconP1.cameras = [camHUD];
 		iconP2.cameras = [camHUD];
-		scoreTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
 		if (FlxG.save.data.songPosition)
 		{
@@ -3076,7 +3116,6 @@ class PlayState extends MusicBeatState
 				add(currentTimingShown);
 
 			var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
-			comboSpr.cameras = [camHUD];
 			comboSpr.screenCenter();
 			comboSpr.x = coolText.x;
 			comboSpr.acceleration.y = 600;
@@ -3101,10 +3140,6 @@ class PlayState extends MusicBeatState
 			currentTimingShown.updateHitbox();
 			comboSpr.updateHitbox();
 			rating.updateHitbox();
-
-			comboSpr.cameras = [camHUD];
-
-			currentTimingShown.cameras = [camHUD];
 
 			var seperatedScore:Array<Int> = [];
 

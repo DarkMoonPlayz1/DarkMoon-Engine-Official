@@ -28,7 +28,8 @@ class MainMenuState extends MusicBeatState
 	var menuItems:FlxTypedGroup<FlxSprite>;
 
 	#if !switch
-	var optionShit:Array<String> = ['story mode', 'freeplay', 'mods', 'options'];
+	var optionShit:Array<String> = ['story mode', 'freeplay', 'options'];
+	// var optionShit:Array<String> = ['story mode', 'freeplay', 'mods', 'options'];
 	#else
 	var optionShit:Array<String> = ['story mode', 'freeplay'];
 	#end
@@ -40,8 +41,9 @@ class MainMenuState extends MusicBeatState
 
 	public static var nightly:String = "";
 
-	public static var darkmoonEngineVer:String = "1.8" + nightly;
+	public static var darkmoonEngineVer:String = "1.9 (FINAL)" + nightly;
 	public static var gameVer:String = "";
+	public static var protoTypeVer:String = " v0.2.0 PROTOTYPE";
 
 	var camFollow:FlxObject;
 
@@ -107,7 +109,8 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.60 * (60 / FlxG.save.data.fpsCap));
 
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, gameVer + (Main.watermarks ? "" + "DarkMoon Engine: " + darkmoonEngineVer : ""), 12);
+		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0,
+			gameVer + (Main.watermarks ? "" + "DarkMoon Engine: " + darkmoonEngineVer + protoTypeVer : ""), 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
