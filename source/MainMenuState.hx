@@ -41,9 +41,9 @@ class MainMenuState extends MusicBeatState
 
 	public static var nightly:String = "";
 
-	public static var darkmoonEngineVer:String = "1.9 (FINAL)" + nightly;
+	public static var darkmoonEngineVer:String = "1.9.1 (FINAL)" + nightly;
 	public static var gameVer:String = "";
-	public static var protoTypeVer:String = " v0.2.0 PROTOTYPE";
+	public static var protoTypeVer:String = " v0.2.1 PROTOTYPE";
 
 	var camFollow:FlxObject;
 

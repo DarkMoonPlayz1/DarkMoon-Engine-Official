@@ -309,7 +309,7 @@ class PlayState extends MusicBeatState
 		switch (iconRPC)
 		{
 			case 'senpai-angry':
-				iconRPC = 'senpai';
+				iconRPC = 'senpai-angry';
 			case 'monster-christmas':
 				iconRPC = 'monster';
 			case 'mom-car':
