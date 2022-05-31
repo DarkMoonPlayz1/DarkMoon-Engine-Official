@@ -14,6 +14,8 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	var stageSuffix:String = "";
 
+	var playingDeathSound:Bool = false;
+
 	public function new(x:Float, y:Float)
 	{
 		var daStage = PlayState.curStage;
@@ -26,7 +28,10 @@ class GameOverSubstate extends MusicBeatSubstate
 			default:
 				daBf = 'bf';
 		}
-
+		if (PlayState.SONG.song.toLowerCase() == 'stress')
+		{
+			daBf = 'bf-holding-gf-dead';
+		}
 		super();
 
 		Conductor.songPosition = 0;
@@ -62,6 +67,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			PlayState.blueballed = 0; // resets counter whenever u hit the ESC key
 			FlxG.sound.music.stop();
+			PlayState.seenCutscene = false;
 
 			if (PlayState.isStoryMode)
 				FlxG.switchState(new StoryMenuState());
@@ -74,7 +80,17 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			FlxG.camera.follow(camFollow, LOCKON, 0.01);
 		}
-
+		if (PlayState.storyWeek == 7)
+		{
+			if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished && !playingDeathSound)
+			{
+				playingDeathSound = true;
+				FlxG.sound.play(Paths.sound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25)), 1, false, null, true, function()
+				{
+					FlxG.sound.music.fadeIn(4, 0.2, 1);
+				});
+			}
+		}
 		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished)
 		{
 			FlxG.sound.playMusic(Paths.music('gameOver' + stageSuffix));
@@ -84,6 +100,11 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			Conductor.songPosition = FlxG.sound.music.time;
 		}
+	}
+
+	function coolStartDeath(startVol:Float = 1)
+	{
+		FlxG.sound.playMusic(Paths.music('gameOver' + stageSuffix), startVol);
 	}
 
 	override function beatHit()

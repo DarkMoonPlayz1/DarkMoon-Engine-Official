@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxG;
 import lime.utils.Assets;
 
 using StringTools;
@@ -25,16 +26,9 @@ class CoolUtil
 		return daList;
 	}
 
-	public static function coolStringFile(path:String):Array<String>
+	inline public static function boundTo(value:Float, min:Float, max:Float):Float
 	{
-		var daList:Array<String> = path.trim().split('\n');
-
-		for (i in 0...daList.length)
-		{
-			daList[i] = daList[i].trim();
-		}
-
-		return daList;
+		return Math.max(min, Math.min(max, value));
 	}
 
 	public static function numberArray(max:Int, ?min = 0):Array<Int>
@@ -45,5 +39,15 @@ class CoolUtil
 			dumbArray.push(i);
 		}
 		return dumbArray;
+	}
+
+	public static function camLerpShit(ratio:Float)
+	{
+		return FlxG.elapsed / (1 / 60) * ratio;
+	}
+
+	public static function coolLerp(a:Float, b:Float, ratio:Float)
+	{
+		return a + camLerpShit(ratio) * (b - a);
 	}
 }

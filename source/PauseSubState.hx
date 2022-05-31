@@ -27,6 +27,8 @@ class PauseSubState extends MusicBeatSubstate // removed the shitty offset text 
 	var curSelected:Int = 0;
 
 	public static var blueballed:Int = 0;
+	public static var practice:FlxText;
+	public static var practicemode:Bool = false;
 
 	var pauseMusic:FlxSound;
 
@@ -77,7 +79,6 @@ class PauseSubState extends MusicBeatSubstate // removed the shitty offset text 
 		FlxTween.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
 		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
 		FlxTween.tween(blueballed, {alpha: 1, y: blueballed.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
-
 		grpMenuShit = new FlxTypedGroup<Alphabet>();
 		add(grpMenuShit);
 
@@ -134,6 +135,7 @@ class PauseSubState extends MusicBeatSubstate // removed the shitty offset text 
 						FlxG.save.data.botplay = !FlxG.save.data.botplay;
 
 					LoadingState.loadAndSwitchState(new PlayState());
+
 				// case 'Change KeyBinds':
 				// OptionsMenu.instance.openSubState(new KeyBindMenu());
 				case "Exit to menu":
@@ -143,7 +145,7 @@ class PauseSubState extends MusicBeatSubstate // removed the shitty offset text 
 						FlxG.save.data.scrollSpeed = 1;
 						FlxG.save.data.downscroll = false;
 					}
-					PlayState.blueballed = 0; // resets counter whenever u go press the exit menu
+					PlayState.blueballed = 0; // resets counter whenever you press the exit menu
 					PlayState.loadRep = false;
 					#if windows
 					if (PlayState.luaModchart != null)
@@ -152,8 +154,8 @@ class PauseSubState extends MusicBeatSubstate // removed the shitty offset text 
 						PlayState.luaModchart = null;
 					}
 					#end
-					if (FlxG.save.data.fpsCap > 290)
-						(cast(Lib.current.getChildAt(0), Main)).setFPSCap(290);
+					if (FlxG.save.data.frameratecap > 1000)
+						(cast(Lib.current.getChildAt(0), Main)).setFramerateCap(1000);
 
 					FlxG.switchState(new MainMenuState());
 			}

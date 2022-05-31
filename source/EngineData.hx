@@ -45,14 +45,11 @@ class EngineData
 			FlxG.save.data.changedHit = false;
 		}
 
-		if (FlxG.save.data.fpsRain == null)
-			FlxG.save.data.fpsRain = false;
+		if (FlxG.save.data.frameratecap == null)
+			FlxG.save.data.frameratecap = 120;
 
-		if (FlxG.save.data.fpsCap == null)
-			FlxG.save.data.fpsCap = 120;
-
-		if (FlxG.save.data.fpsCap > 285 || FlxG.save.data.fpsCap < 60)
-			FlxG.save.data.fpsCap = 120;
+		if (FlxG.save.data.frameratecap > 285 || FlxG.save.data.frameratecap < 60)
+			FlxG.save.data.frameratecap = 120;
 
 		if (FlxG.save.data.scrollSpeed == null)
 			FlxG.save.data.scrollSpeed = 1;

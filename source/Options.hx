@@ -112,7 +112,7 @@ class DFJKOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Key Bindings";
+		return "Controls";
 	}
 }
 
@@ -159,8 +159,8 @@ class FocusOption extends Option
 	}
 }
 
-class CustomizeGameplay extends Option
-{
+/*class ModuleEditor extends Option
+	{
 	public function new(desc:String)
 	{
 		super();
@@ -176,10 +176,9 @@ class CustomizeGameplay extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Customize Gameplay";
+		return "Module Editor";
 	}
-}
-
+}*/
 class DownscrollOption extends Option
 {
 	public function new(desc:String)
@@ -198,6 +197,59 @@ class DownscrollOption extends Option
 	private override function updateDisplay():String
 	{
 		return FlxG.save.data.downscroll ? "Downscroll" : "Upscroll";
+	}
+}
+
+class FramerateCapOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+		acceptValues = true;
+	}
+
+	public override function press():Bool
+	{
+		return false;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Framerate Cap";
+	}
+
+	override function right():Bool
+	{
+		if (FlxG.save.data.frameratecap >= 1000)
+		{
+			FlxG.save.data.frameratecap = 1000;
+			(cast(Lib.current.getChildAt(0), Main)).setFramerateCap(1000);
+		}
+		else
+			FlxG.save.data.frameratecap = FlxG.save.data.frameratecap + 10;
+		(cast(Lib.current.getChildAt(0), Main)).setFramerateCap(FlxG.save.data.frameratecap);
+
+		return true;
+	}
+
+	override function left():Bool
+	{
+		if (FlxG.save.data.frameratecap > 290)
+			FlxG.save.data.frameratecap = 290;
+		else if (FlxG.save.data.frameratecap < 60)
+			FlxG.save.data.frameratecap = Application.current.window.displayMode.refreshRate;
+		else
+			FlxG.save.data.frameratecap = FlxG.save.data.frameratecap - 10;
+				(cast(Lib.current.getChildAt(0), Main)).setFramerateCap(FlxG.save.data.frameratecap);
+		return true;
+	}
+
+	override function getValue():String
+	{
+		return "Current Framerate: "
+			+ FlxG.save.data.frameratecap
+			+ (FlxG.save.data.frameratecap == Application.current.window.displayMode.refreshRate ? "Hz (Refresh Rate)" : "");
 	}
 }
 
@@ -243,7 +295,7 @@ class HitSoundsOption extends Option
 	}
 }
 
-class FullComboMode extends Option
+class InstaKillMode extends Option
 {
 	public function new(desc:String)
 	{
@@ -253,14 +305,14 @@ class FullComboMode extends Option
 
 	public override function press():Bool
 	{
-		FlxG.save.data.fullcombomode = !FlxG.save.data.fullcombomode;
+		FlxG.save.data.instakillmode = !FlxG.save.data.instakillmode;
 		display = updateDisplay();
 		return true;
 	}
 
 	private override function updateDisplay():String
 	{
-		return "Full Combo Mode " + (!FlxG.save.data.fullcombomode ? "off" : "on");
+		return "Insta Kill Mode " + (!FlxG.save.data.instakillmode ? "off" : "on");
 	}
 }
 
@@ -323,7 +375,7 @@ class SongPositionOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Song Position " + (!FlxG.save.data.songPosition ? "off" : "on");
+		return "Song Bar " + (!FlxG.save.data.songPosition ? "off" : "on");
 	}
 }
 
@@ -489,7 +541,7 @@ class ScrollSpeedOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Scroll Speed";
+		return "Change Scroll Speed";
 	}
 
 	override function right():Bool
@@ -654,5 +706,5 @@ class BotPlay extends Option
 	}
 
 	private override function updateDisplay():String
-		return "BotPlay " + (FlxG.save.data.botplay ? "on" : "off");
+		return "AutoPlay " + (FlxG.save.data.botplay ? "on" : "off");
 }

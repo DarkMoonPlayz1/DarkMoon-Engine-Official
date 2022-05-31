@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <xml>
 	<set name="PROJECT_DIR" value="${this_dir}" />
 	<set name="CPP_DIR" value="${PROJECT_DIR}/cpp" />
@@ -11,5 +10,6 @@
 	<target id='haxe' tool='linker' toolid='exe'>
 		<lib name='${CPP_DIR}/lib/libvlc.lib' if='windows'/>
 		<lib name='${CPP_DIR}/lib/libvlccore.lib' if='windows'/>
+        <lib name="-l${CPP_DIR}/lib/libvlc" unless="windows"/>
 	</target>
 </xml>

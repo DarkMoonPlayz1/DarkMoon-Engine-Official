@@ -11,10 +11,10 @@ class NoteSplash extends FlxSprite
 
 		frames = Paths.getSparrowAtlas('noteSplashes', 'shared');
 
-		animation.addByPrefix("splash-0", "note impact 1 purple", 24, false);
-		animation.addByPrefix("splash-1", "note impact 1 blue", 24, false);
-		animation.addByPrefix("splash-2", "note impact 1 green", 24, false);
-		animation.addByPrefix("splash-3", "note impact 1 red", 24, false);
+		animation.addByPrefix("splash-0", "note splash purple", 24, false);
+		animation.addByPrefix("splash-1", "note splash blue", 24, false);
+		animation.addByPrefix("splash-2", "note splash green", 24, false);
+		animation.addByPrefix("splash-3", "note splash red", 24, false);
 
 		setupNoteSplash(x, y, note);
 		antialiasing = true;

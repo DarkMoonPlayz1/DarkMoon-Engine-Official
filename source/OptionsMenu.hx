@@ -22,20 +22,19 @@ class OptionsMenu extends MusicBeatState
 
 	var selector:FlxText;
 	var curSelected:Int = 0;
-
 	var options:Array<OptionCategory> = [
-		new OptionCategory("Ingame Modules", [
+		new OptionCategory("Game Customizer", [
 			new DFJKOption(controls),
 			// new GhostTapOption("You won't deal any damage and misses if this option is enabled."),
 			new Judgement("Customize your Hit Timings (LEFT or RIGHT)"),
-			#if desktop
+			#if desktop new FramerateCapOption("Cap your framerate."),
 			#end
-			new ScrollSpeedOption("Change your scroll speed (1 = Chart dependent)"),
+			new ScrollSpeedOption("Change your scroll speed (1 = Depends on the chart)"),
 			new AccuracyDOption("Change how accuracy is calculated."),
-			new ResetButtonOption("If this option is enabled, you can press R to die. (Default is set to disabled)"),
-			new CustomizeGameplay("Drag and drop modules."),
+			new ResetButtonOption("If this option is enabled, you can press R to die. (Default is set to enabled)"),
+			// new ModuleEditor("Drag and drop modules."),
 		]),
-		new OptionCategory("Appearance", [
+		new OptionCategory("Prefrences", [
 			#if desktop
 			new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay."),
 			new DownscrollOption("Flips your HUD (Example: Arrows from top to bottom, health and accuracy from bottom to top)."),
@@ -48,8 +47,8 @@ class OptionsMenu extends MusicBeatState
 			new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay.")
 			#end
 		]),
-		new OptionCategory("Gamemodes", [
-			new FullComboMode("You are forced to full combo which ever song you're on or else you'll die."),
+		new OptionCategory("Extras", [
+			new InstaKillMode("You are forced to full combo which ever song you're on or else you'll die."),
 		]),
 		new OptionCategory("Misc", [
 			#if desktop new HitSoundsOption("Activate hit sounds every time you hit a note."), new ReplayOption("View replays of any song you have played"),
@@ -82,6 +81,8 @@ class OptionsMenu extends MusicBeatState
 		menuBG.antialiasing = true;
 		add(menuBG);
 
+		FlxG.sound.playMusic(Paths.music('optionsMenu'), 1);
+
 		grpControls = new FlxTypedGroup<Alphabet>();
 		add(grpControls);
 
@@ -96,7 +97,7 @@ class OptionsMenu extends MusicBeatState
 
 		currentDescription = "none";
 
-		versionShit = new FlxText(5, FlxG.height + 40, 0, "Description - " + currentDescription, 12); // Fuck that useless offset shit text
+		versionShit = new FlxText(5, FlxG.height + 40, 0, "" + currentDescription, 12); // Fuck that useless offset shit text
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 
@@ -250,16 +251,16 @@ class OptionsMenu extends MusicBeatState
 		if (isCat)
 			currentDescription = currentSelectedCat.getOptions()[curSelected].getDescription();
 		else
-			currentDescription = "Please select a category";
+			currentDescription = "";
 		if (isCat)
 		{
 			if (currentSelectedCat.getOptions()[curSelected].getAccept())
-				versionShit.text = currentSelectedCat.getOptions()[curSelected].getValue() + " - Description - " + currentDescription;
+				versionShit.text = currentSelectedCat.getOptions()[curSelected].getValue() + "" + currentDescription;
 			else
-				versionShit.text = "Description - " + currentDescription;
+				versionShit.text = " " + currentDescription;
 		}
 		else
-			versionShit.text = "Description - " + currentDescription;
+			versionShit.text = "" + currentDescription;
 		// selector.y = (70 * curSelected) + 30;
 
 		var bullShit:Int = 0;

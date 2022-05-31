@@ -107,7 +107,7 @@ class Main extends Sprite
 		fpsCounter.textColor = color;
 	}
 
-	public function setFPSCap(cap:Float)
+	public function setFramerateCap(cap:Float)
 	{
 		openfl.Lib.current.stage.frameRate = cap;
 	}

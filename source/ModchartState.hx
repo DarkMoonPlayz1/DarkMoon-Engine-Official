@@ -1,7 +1,8 @@
-// Modchart system code ripped off from Kade Engine, Credits to Kade for the original code
+// Updated modchart system code ripped off from Kade Engine, Credits to Kade for the original code
 // LUA MY LOVE
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
+import openfl.display3D.textures.VideoTexture;
 #if windows
 import flixel.FlxBasic;
 import flixel.FlxCamera;
@@ -284,23 +285,27 @@ class ModchartState
 		PlayState.instance.removeObject(PlayState.boyfriend);
 		PlayState.boyfriend = new Boyfriend(oldboyfriendx, oldboyfriendy, id);
 		PlayState.instance.addObject(PlayState.boyfriend);
-		PlayState.instance.iconP2.animation.play(id);
+		PlayState.instance.iconP1.animation.play(id);
 	}
 
 	function makeAnimatedLuaSprite(spritePath:String, names:Array<String>, prefixes:Array<String>, startAnim:String, id:String)
 	{
 		#if sys
-		var data:BitmapData = BitmapData.fromFile(Sys.getCwd() + "assets/data/" + PlayState.SONG.song.toLowerCase() + '/' + spritePath + ".png");
+		// pre lowercasing the song name (makeAnimatedLuaSprite)
+		var songLowercase = StringTools.replace(PlayState.SONG.song, " ", "-").toLowerCase();
+		switch (songLowercase)
+		{
+			case 'dad-battle':
+				songLowercase = 'dadbattle';
+			case 'philly-nice':
+				songLowercase = 'philly';
+		}
+
+		var data:BitmapData = BitmapData.fromFile(Sys.getCwd() + "assets/data/" + songLowercase + '/' + spritePath + ".png");
 
 		var sprite:FlxSprite = new FlxSprite(0, 0);
 
-		sprite.frames = FlxAtlasFrames.fromSparrow(FlxGraphic.fromBitmapData(data),
-			Sys.getCwd()
-			+ "assets/data/"
-			+ PlayState.SONG.song.toLowerCase()
-			+ "/"
-			+ spritePath
-			+ ".xml");
+		sprite.frames = FlxAtlasFrames.fromSparrow(FlxGraphic.fromBitmapData(data), Sys.getCwd() + "assets/data/" + songLowercase + "/" + spritePath + ".xml");
 
 		trace(sprite.frames.frames.length);
 
@@ -323,7 +328,17 @@ class ModchartState
 	function makeLuaSprite(spritePath:String, toBeCalled:String, drawBehind:Bool)
 	{
 		#if sys
-		var data:BitmapData = BitmapData.fromFile(Sys.getCwd() + "assets/data/" + PlayState.SONG.song.toLowerCase() + '/' + spritePath + ".png");
+		// pre lowercasing the song name (makeLuaSprite)
+		var songLowercase = StringTools.replace(PlayState.SONG.song, " ", "-").toLowerCase();
+		switch (songLowercase)
+		{
+			case 'dad-battle':
+				songLowercase = 'dadbattle';
+			case 'philly-nice':
+				songLowercase = 'philly';
+		}
+
+		var data:BitmapData = BitmapData.fromFile(Sys.getCwd() + "assets/data/" + songLowercase + '/' + spritePath + ".png");
 
 		var sprite:FlxSprite = new FlxSprite(0, 0);
 		var imgWidth:Float = FlxG.width / data.width;
@@ -386,11 +401,21 @@ class ModchartState
 
 		// shaders = new Array<LuaShader>();
 
-		var result = LuaL.dofile(lua, Paths.lua(PlayState.SONG.song.toLowerCase() + "/modchart")); // execute le file
+		// pre lowercasing the song name (new)
+		var songLowercase = StringTools.replace(PlayState.SONG.song, " ", "-").toLowerCase();
+		switch (songLowercase)
+		{
+			case 'dad-battle':
+				songLowercase = 'dadbattle';
+			case 'philly-nice':
+				songLowercase = 'philly';
+		}
+
+		var result = LuaL.dofile(lua, Paths.lua(songLowercase + "/modchart")); // execute le file
 
 		if (result != 0)
 		{
-			Application.current.window.alert("LUA COMPILE ERROR:\n" + Lua.tostring(lua, result), "DarkMoon Engine Modcharts");
+			Application.current.window.alert("LUA COMPILE ERROR:\n" + Lua.tostring(lua, result), "Kade Engine Modcharts");
 			lua = null;
 			LoadingState.loadAndSwitchState(new MainMenuState());
 		}
@@ -402,6 +427,8 @@ class ModchartState
 		setVar("scrollspeed", FlxG.save.data.scrollSpeed != 1 ? FlxG.save.data.scrollSpeed : PlayState.SONG.speed);
 		setVar("fpsCap", FlxG.save.data.fpsCap);
 		setVar("downscroll", FlxG.save.data.downscroll);
+		setVar("flashing", FlxG.save.data.flashing);
+		setVar("distractions", FlxG.save.data.distractions);
 
 		setVar("curStep", 0);
 		setVar("curBeat", 0);
