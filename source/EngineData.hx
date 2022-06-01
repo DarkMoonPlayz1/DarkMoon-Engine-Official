@@ -36,7 +36,7 @@ class EngineData
 			FlxG.save.data.fullcombomode = false;
 
 		if (FlxG.save.data.fps == null)
-			FlxG.save.data.fps = false;
+			FlxG.save.data.fps = true;
 
 		if (FlxG.save.data.changedHit == null)
 		{
