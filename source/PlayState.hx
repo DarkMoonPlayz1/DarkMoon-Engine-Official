@@ -88,6 +88,7 @@ class PlayState extends MusicBeatState
 	public static var goods:Int = 0;
 	public static var sicks:Int = 0;
 	public static var blueballed:Int = 0; // DEATH COUNTER, I WIN! ohwait-
+	public static var practiceMode:Bool = false;
 	public static var isSM:Bool = false;
 
 	private var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
@@ -218,7 +219,6 @@ class PlayState extends MusicBeatState
 
 	var talking:Bool = true;
 	var songScore:Int = 0;
-	var songScoreDef:Int = 0;
 	var scoreTxt:FlxText;
 	var judgementCounter:FlxText;
 	var replayTxt:FlxText;
@@ -370,7 +370,7 @@ class PlayState extends MusicBeatState
 			+ " ("
 			+ storyDifficultyText
 			+ ") "
-			+ Ratings.GenerateLetterRank(accuracy),
+			+ AccuracyData.GenerateLetterRank(accuracy),
 			"\nAcc: "
 			+ HelperFunctions.truncateFloat(accuracy, 2)
 			+ "% | Score: "
@@ -1667,7 +1667,7 @@ class PlayState extends MusicBeatState
 			+ " ("
 			+ storyDifficultyText
 			+ ") "
-			+ Ratings.GenerateLetterRank(accuracy),
+			+ AccuracyData.GenerateLetterRank(accuracy),
 			"\nAcc: "
 			+ HelperFunctions.truncateFloat(accuracy, 2)
 			+ "% | Score: "
@@ -2008,7 +2008,7 @@ class PlayState extends MusicBeatState
 				+ " ("
 				+ storyDifficultyText
 				+ ") "
-				+ Ratings.GenerateLetterRank(accuracy),
+				+ AccuracyData.GenerateLetterRank(accuracy),
 				"Acc: "
 				+ HelperFunctions.truncateFloat(accuracy, 2)
 				+ "% | Score: "
@@ -2045,7 +2045,7 @@ class PlayState extends MusicBeatState
 					+ " ("
 					+ storyDifficultyText
 					+ ") "
-					+ Ratings.GenerateLetterRank(accuracy),
+					+ AccuracyData.GenerateLetterRank(accuracy),
 					"\nAcc: "
 					+ HelperFunctions.truncateFloat(accuracy, 2)
 					+ "% | Score: "
@@ -2057,7 +2057,7 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), iconRPC);
+				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ") " + AccuracyData.GenerateLetterRank(accuracy), iconRPC);
 			}
 			#end
 		}
@@ -2081,7 +2081,7 @@ class PlayState extends MusicBeatState
 			+ " ("
 			+ storyDifficultyText
 			+ ") "
-			+ Ratings.GenerateLetterRank(accuracy),
+			+ AccuracyData.GenerateLetterRank(accuracy),
 			"\nAcc: "
 			+ HelperFunctions.truncateFloat(accuracy, 2)
 			+ "% | Score: "
@@ -2203,7 +2203,7 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
-		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS, accuracy);
+		scoreTxt.text = AccuracyData.CalculateRanking(songScore, nps, maxNPS, accuracy);
 
 		var lengthInPx = scoreTxt.textField.length * scoreTxt.frameHeight;
 
@@ -2552,7 +2552,7 @@ class PlayState extends MusicBeatState
 					+ " ("
 					+ storyDifficultyText
 					+ ") "
-					+ Ratings.GenerateLetterRank(accuracy),
+					+ AccuracyData.GenerateLetterRank(accuracy),
 					"\nAcc: "
 					+ HelperFunctions.truncateFloat(accuracy, 2)
 					+ "% | Score: "
@@ -2596,7 +2596,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (health <= 0)
+		if (health <= 0 && !practiceMode)
 		{
 			boyfriend.stunned = true;
 			deathCounter++;
@@ -2617,7 +2617,7 @@ class PlayState extends MusicBeatState
 				+ " ("
 				+ storyDifficultyText
 				+ ") "
-				+ Ratings.GenerateLetterRank(accuracy),
+				+ AccuracyData.GenerateLetterRank(accuracy),
 				"\nAcc: "
 				+ HelperFunctions.truncateFloat(accuracy, 2)
 				+ "% | Score: "
@@ -2651,7 +2651,7 @@ class PlayState extends MusicBeatState
 					+ " ("
 					+ storyDifficultyText
 					+ ") "
-					+ Ratings.GenerateLetterRank(accuracy),
+					+ AccuracyData.GenerateLetterRank(accuracy),
 					"\nAcc: "
 					+ HelperFunctions.truncateFloat(accuracy, 2)
 					+ "% | Score: "
@@ -3194,8 +3194,8 @@ class PlayState extends MusicBeatState
 
 		if (daRating != 'shit' || daRating != 'bad')
 		{
-			songScore += Math.round(score);
-			songScoreDef += Math.round(ConvertScore.convertScore(noteDiff));
+			if (!practiceMode)
+				songScore += Math.round(score);
 
 			/* if (combo > 60)
 					daRating = 'sick';
@@ -3543,6 +3543,9 @@ class PlayState extends MusicBeatState
 			combo = 0;
 			misses++;
 
+			if (!practiceMode)
+				songScore -= 10;
+
 			// var noteDiff:Float = Math.abs(daNote.strumTime - Conductor.songPosition);
 			// var wife:Float = EtternaFunctions.wife3(noteDiff, FlxG.save.data.etternaMode ? 1 : 1.7);
 
@@ -3578,8 +3581,6 @@ class PlayState extends MusicBeatState
 
 	/*function badNoteCheck()
 		{
-			// just double pasting this shit cuz fuk u
-			// REDO THIS SYSTEM!
 			var upP = controls.UP_P;
 			var rightP = controls.RIGHT_P;
 			var downP = controls.DOWN_P;
@@ -3608,7 +3609,7 @@ class PlayState extends MusicBeatState
 	{
 		var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition);
 
-		note.rating = Ratings.CalculateRating(noteDiff);
+		note.rating = AccuracyData.CalculateRating(noteDiff);
 
 		/* if (loadRep)
 			{
@@ -3628,7 +3629,7 @@ class PlayState extends MusicBeatState
 	{
 		var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition);
 
-		note.rating = Ratings.CalculateRating(noteDiff);
+		note.rating = AccuracyData.CalculateRating(noteDiff);
 
 		if (!note.isSustainNote)
 			notesHitArray.unshift(Date.now());
@@ -3837,7 +3838,7 @@ class PlayState extends MusicBeatState
 			+ " ("
 			+ storyDifficultyText
 			+ ") "
-			+ Ratings.GenerateLetterRank(accuracy),
+			+ AccuracyData.GenerateLetterRank(accuracy),
 			"Acc: "
 			+ HelperFunctions.truncateFloat(accuracy, 2)
 			+ "% | Score: "

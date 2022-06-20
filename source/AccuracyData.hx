@@ -1,23 +1,23 @@
 import flixel.FlxG;
 
-class Ratings
+class AccuracyData
 {
 	public static function GenerateLetterRank(accuracy:Float) // generate a letter ranking
 	{
-		var ranking:String = "N/A";
+		var ranking:String = "Rank:F";
 		if (FlxG.save.data.botplay && !PlayState.loadRep)
-			ranking = "AutoPlay";
+			ranking = "Rank:AutoPlay";
 
 		if (PlayState.misses == 0 && PlayState.bads == 0 && PlayState.shits == 0 && PlayState.goods == 0)
-			ranking = "[PFC]";
+			ranking = "Rank:[PFC]";
 		else if (PlayState.misses == 0 && PlayState.bads == 0 && PlayState.shits == 0 && PlayState.goods >= 1)
-			ranking = "[GFC]";
+			ranking = "Rank:[GFC]";
 		else if (PlayState.misses == 0)
-			ranking = "[FC]";
+			ranking = "Rank:[FC]";
 		else if (PlayState.misses < 10)
-			ranking = "[SDCB]";
+			ranking = "Rank:[SDCB]";
 		else
-			ranking = "[Clear]";
+			ranking = "Rank:[Clear]";
 
 		var wifeConditions:Array<Bool> = [
 			accuracy >= 99.9935, // S
@@ -86,9 +86,9 @@ class Ratings
 		}
 
 		if (accuracy == 0)
-			ranking = "N/A";
+			ranking = "Rank:F";
 		else if (FlxG.save.data.botplay && !PlayState.loadRep)
-			ranking = "AutoPlay";
+			ranking = "Rank:AutoPlay";
 
 		return ranking;
 	}
@@ -132,7 +132,7 @@ class Ratings
 		return rating;
 	}
 
-	public static function CalculateRanking(score:Int, scoreDef:Int, nps:Int, maxNPS:Int, accuracy:Float):String
+	public static function CalculateRanking(score:Int, nps:Int, maxNPS:Int, accuracy:Float):String
 	{
 		return (FlxG.save.data.npsDisplay ? // NPS Toggle
 			"NPS: "
@@ -142,15 +142,15 @@ class Ratings
 			+ ")"
 			+ (!PlayStateChangeables.botPlay || PlayState.loadRep ? " | " : "") : "") + // 	NPS
 			(!PlayStateChangeables.botPlay
-				|| PlayState.loadRep ? "Score:" + (Conductor.safeFrames != 10 ? score + " (" + scoreDef + ")" : "" + score) + // Score
+				|| PlayState.loadRep ? "Score:" + (Conductor.safeFrames != 10 ? score + " " : "" + score) + // Score
 					(FlxG.save.data.accuracyDisplay ? // Accuracy Toggle
-						" // Misses:"
+						" - Accuracy:"
+						+ (PlayStateChangeables.botPlay && !PlayState.loadRep ? "N/A" : HelperFunctions.truncateFloat(accuracy, 2) + " %")
+						+ //    Accuracy
+						" - Combo Breaks:"
 						+ PlayState.misses
 						+ // 	Misses/Combo Breaks
-						" // Accuracy:"
-						+ (PlayStateChangeables.botPlay && !PlayState.loadRep ? "N/A" : HelperFunctions.truncateFloat(accuracy, 2) + " %")
-						+ // 	Accuracy
-						" // "
+						" - "
 						+ GenerateLetterRank(accuracy) : "") : ""); // 	Letter Rank
 	}
 }

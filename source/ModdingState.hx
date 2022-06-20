@@ -1,208 +1,326 @@
-#if FEATURE_MODDINGSTATE
-import polymod.Polymod;
-import polymod.backends.OpenFLBackend;
-import polymod.backends.PolymodAssets.PolymodAssetType;
-import polymod.format.ParseRules.LinesParseFormat;
-import polymod.format.ParseRules.TextFileFormat;
+package;
+
+#if FILESYSTEM
+import flixel.FlxG;
+import flixel.FlxObject;
+import flixel.FlxSprite;
+import flixel.addons.display.FlxBackdrop;
+import flixel.addons.ui.FlxUIButton;
+import flixel.addons.ui.FlxUIGroup;
+import flixel.addons.ui.FlxUIList;
+import flixel.addons.ui.FlxUIRegion;
+import flixel.addons.ui.FlxUITabMenu;
+import flixel.addons.ui.FlxUITypedButton;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxSpriteGroup;
+import flixel.math.FlxMath;
+import flixel.math.FlxRect;
+import flixel.text.FlxText;
+import flixel.tweens.FlxTween;
+import flixel.ui.FlxButton;
+import flixel.util.FlxColor;
+import haxe.Json;
+import lime.app.Application;
+import openfl.display.BitmapData;
+import yaml.Parser.ParserOptions;
+import yaml.Yaml;
+
+using StringTools;
+
+#if FILESYSTEM
+import sys.FileSystem;
+import sys.io.File;
 #end
 
-/**
- * Okay now this is epic.
- */
-class ModdingState
+class ModLoadingState extends MusicBeatState
 {
-	/**
-	 * The current API version.
-	 * Must be formatted in Semantic Versioning v2; <MAJOR>.<MINOR>.<PATCH>.
-	 * 
-	 * Remember to increment the major version if you make breaking changes to mods!
-	 */
-	static final API_VERSION = "0.1.0";
+	var selector:FlxText;
 
-	static final MOD_DIRECTORY = "mods";
+	static var curSelected:Int = 0;
 
-	public static function initialize()
+	var scrollBarBG:FlxSprite;
+	var scrollThing:FlxSprite;
+
+	var modGroup:FlxTypedGroup<ModWidget>;
+	var camFollow:FlxObject;
+	var camPos:FlxObject;
+
+	override function create()
 	{
-		#if FEATURE_MODDINGSTATE
-		Debug.logInfo("Initializing ModdingState...");
-		loadModsById(getModIds());
-		#else
-		Debug.logInfo("ModdingState not initialized; not supported on this platform.");
-		#end
-	}
+		FlxG.mouse.visible = true;
+		usesMouse = true;
 
-	#if FEATURE_MODDINGSTATE
-	public static function loadModsById(ids:Array<String>)
-	{
-		Debug.logInfo('Attempting to load ${ids.length} mods...');
-		var loadedModList = polymod.Polymod.init({
-			// Root directory for all mods.
-			modRoot: MOD_DIRECTORY,
-			// The directories for one or more mods to load.
-			dirs: ids,
-			// Framework being used to load assets. We're using a CUSTOM one which extends the OpenFL one.
-			framework: CUSTOM,
-			// The current version of our API.
-			apiVersion: API_VERSION,
-			// Call this function any time an error occurs.
-			errorCallback: onPolymodError,
-			// Enforce semantic version patterns for each mod.
-			// modVersions: null,
-			// A map telling Polymod what the asset type is for unfamiliar file extensions.
-			// extensionMap: [],
+		var menuBG:FlxBackdrop = new FlxBackdrop(Paths.image('menuDesat'), 1, 1, false);
+		menuBG.color = 0xFFea71fd;
+		menuBG.scrollFactor.set(0, 0.2);
+		menuBG.antialiasing = true;
+		add(menuBG);
 
-			frameworkParams: buildFrameworkParams(),
+		modGroup = new FlxTypedGroup<ModWidget>();
+		add(modGroup);
 
-			// Use a custom backend so we can get a picture of what's going on,
-			// or even override behavior ourselves.
-			customBackend: ModdingStateBackend,
+		camFollow = new FlxObject(0, 0, 1, 1);
+		add(camFollow);
 
-			// List of filenames to ignore in mods. Use the default list to ignore the metadata file, etc.
-			ignoredFiles: Polymod.getDefaultIgnoreList(),
+		camPos = new FlxObject(0, 0, 1, 1);
+		add(camPos);
 
-			// Parsing rules for various data formats.
-			parseRules: buildParseRules(),
-		});
-
-		Debug.logInfo('Mod loading complete. We loaded ${loadedModList.length} / ${ids.length} mods.');
-
-		for (mod in loadedModList)
-			Debug.logTrace('  * ${mod.title} v${mod.modVersion} [${mod.id}]');
-
-		var fileList = Polymod.listModFiles("IMAGE");
-		Debug.logInfo('Installed mods have replaced ${fileList.length} images.');
-		for (item in fileList)
-			Debug.logTrace('  * $item');
-
-		fileList = Polymod.listModFiles("TEXT");
-		Debug.logInfo('Installed mods have replaced ${fileList.length} text files.');
-		for (item in fileList)
-			Debug.logTrace('  * $item');
-
-		fileList = Polymod.listModFiles("MUSIC");
-		Debug.logInfo('Installed mods have replaced ${fileList.length} music files.');
-		for (item in fileList)
-			Debug.logTrace('  * $item');
-
-		fileList = Polymod.listModFiles("SOUND");
-		Debug.logInfo('Installed mods have replaced ${fileList.length} sound files.');
-		for (item in fileList)
-			Debug.logTrace('  * $item');
-	}
-
-	static function getModIds():Array<String>
-	{
-		Debug.logInfo('Scanning the mods folder...');
-		var modMetadata = Polymod.scan(MOD_DIRECTORY);
-		Debug.logInfo('Found ${modMetadata.length} mods when scanning.');
-		var modIds = [for (i in modMetadata) i.id];
-		return modIds;
-	}
-
-	static function buildParseRules():polymod.format.ParseRules
-	{
-		var output = polymod.format.ParseRules.getDefault();
-		// Ensure TXT files have merge support.
-		output.addType("txt", TextFileFormat.LINES);
-
-		// You can specify the format of a specific file, with file extension.
-		// output.addFile("data/introText.txt", TextFileFormat.LINES)
-		return output;
-	}
-
-	static inline function buildFrameworkParams():polymod.FrameworkParams
-	{
-		return {
-			assetLibraryPaths: [
-				"default" => "./preload", // ./preload
-				"sm" => "./sm",
-				"songs" => "./songs",
-				"shared" => "./",
-				"tutorial" => "./tutorial",
-				"week1" => "./week1",
-				"week2" => "./week2",
-				"week3" => "./week3",
-				"week4" => "./week4",
-				"week5" => "./week5",
-				"week6" => "./week6"
-			]
-		}
-	}
-
-	static function onPolymodError(error:PolymodError):Void
-	{
-		// Perform an action based on the error code.
-		switch (error.code)
+		for (mod in FileSystem.readDirectory("mods"))
 		{
-			// case "parse_mod_version":
-			// case "parse_api_version":
-			// case "parse_mod_api_version":
-			// case "missing_mod":
-			// case "missing_meta":
-			// case "missing_icon":
-			// case "version_conflict_mod":
-			// case "version_conflict_api":
-			// case "version_prerelease_api":
-			// case "param_mod_version":
-			// case "framework_autodetect":
-			// case "framework_init":
-			// case "undefined_custom_backend":
-			// case "failed_create_backend":
-			// case "merge_error":
-			// case "append_error":
-			default:
-				// Log the message based on its severity.
-				switch (error.severity)
-				{
-					case NOTICE:
-						Debug.logInfo(error.message, null);
-					case WARNING:
-						Debug.logWarn(error.message, null);
-					case ERROR:
-						Debug.logError(error.message, null);
-				}
+			var modInfo = Yaml.parse(File.getContent(Paths.modInfoFile(mod)));
+
+			var pain = new ModWidget(0, 0, mod, modInfo.get("name"), modInfo.get("description"), modInfo.get("version"),
+				Helper.toBool(modInfo.get("icon-antialiasing")));
+			pain.screenCenter();
+			pain.scrollFactor.set(1, 1);
+			pain.y += modGroup.length * 225;
+			pain.ID = modGroup.length;
+			modGroup.add(pain);
 		}
+
+		FlxG.camera.follow(camPos, LOCKON, 1);
+		changeItem();
+
+		super.create();
 	}
-	#end
+
+	function changeItem(huh:Int = 0)
+	{
+		FlxG.sound.play(Paths.sound('scrollMenu'));
+
+		curSelected += huh;
+
+		if (curSelected >= modGroup.length)
+			curSelected = 0;
+		if (curSelected < 0)
+			curSelected = modGroup.length - 1;
+
+		modGroup.forEach(function(spr:ModWidget)
+		{
+			if (spr.ID == curSelected)
+			{
+				camFollow.setPosition(spr.x + spr.width / 2, spr.y + spr.height / 2);
+			}
+		});
+	}
+
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+
+		var lerp:Float = Helper.boundTo(elapsed * 9.2, 0, 1);
+		camPos.x = FlxMath.lerp(camPos.x, camFollow.x, lerp);
+		camPos.y = FlxMath.lerp(camPos.y, camFollow.y, lerp);
+
+		if (controls.BACK)
+		{
+			#if FILESYSTEM
+			var prevMod = Paths.currentMod;
+
+			for (mod in FileSystem.readDirectory('mods'))
+			{
+				Paths.setCurrentMod(mod);
+				if (Paths.checkModLoad(mod))
+					CoolUtil.loadCustomDifficulties();
+			}
+
+			Paths.setCurrentMod(prevMod);
+			#end
+
+			FlxG.switchState(new MainMenuState());
+			FlxG.mouse.visible = false;
+		}
+
+		if (controls.UP_P)
+			changeItem(-1);
+
+		if (controls.DOWN_P)
+			changeItem(1);
+
+		if (FlxG.mouse.wheel != 0)
+			changeItem(-FlxG.mouse.wheel);
+	}
 }
 
-#if FEATURE_MODDINGSTATE
-class ModdingStateBackend extends OpenFLBackend
+class ModWidget extends FlxSpriteGroup
 {
-	public function new()
+	public var icon:FlxSprite;
+	public var iconBG:FlxSprite;
+
+	public var modName:FlxText;
+	public var modNameBG:FlxSprite;
+
+	public var modDesc:FlxText;
+	public var modDescBG:FlxSprite;
+
+	public var daSwitch:FlxUIButton;
+	public var prioritySwitch:FlxUIButton;
+
+	public var modRepping:String;
+
+	public var versionText:FlxText;
+
+	public function new(x:Float, y:Float, modFolder:String, ?name:String, ?description:String, ?version:String, ?iconAntialiasing:Bool)
 	{
-		super();
-		Debug.logTrace('Initialized custom asset loader backend.');
+		super(x, y);
+
+		modRepping = modFolder;
+
+		name = name != null ? name : "Mod name not found.";
+		description = description != null ? description : "Mod description not found.";
+		version = version != null ? version : "";
+		iconAntialiasing = iconAntialiasing != null ? iconAntialiasing : true;
+
+		// mf aint \n literally wth
+		name = name.replace("\\n", "\n");
+		description = description.replace("\\n", "\n");
+		version = version.replace("\\n", "\n");
+
+		iconBG = new FlxSprite().makeGraphic(200, 200, FlxColor.BLACK);
+		iconBG.alpha = 0.4;
+
+		modNameBG = new FlxSprite(205, 0).makeGraphic(600, 50, FlxColor.BLACK);
+		modNameBG.alpha = 0.4;
+
+		modDescBG = new FlxSprite(205, 55).makeGraphic(600, 145, FlxColor.BLACK);
+		modDescBG.alpha = 0.4;
+
+		var loadedBitmap:BitmapData = null;
+
+		if (FileSystem.exists('mods/$modFolder/icon.png'))
+			loadedBitmap = BitmapData.fromFile('mods/$modFolder/icon.png');
+
+		icon = new FlxSprite();
+
+		if (loadedBitmap != null)
+		{
+			icon.loadGraphic(loadedBitmap, true, 150, 150);
+
+			var totalFrames = Math.floor(loadedBitmap.width / 150) * Math.floor(loadedBitmap.height / 150);
+			icon.animation.add("icon", [for (i in 0...totalFrames) i], 10);
+			icon.animation.play("icon");
+		}
+		else
+			icon.loadGraphic(Paths.image('no-icon'));
+
+		icon.setGraphicSize(Std.int(iconBG.width - 25), Std.int(iconBG.height - 25));
+		icon.updateHitbox();
+		icon.setPosition(iconBG.x + 12.5, iconBG.y + 12.5);
+
+		icon.antialiasing = iconAntialiasing;
+
+		modName = new FlxText(0, 5, modNameBG.width - 10);
+		modName.setFormat(Paths.font("vcr.ttf"), 26, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		modName.borderSize = 2;
+		modName.text = name;
+		modName.x = modNameBG.x + 5;
+		modName.y = modNameBG.y + (modNameBG.height / 2) - (modName.height / 2);
+
+		modDesc = new FlxText(0, modDescBG.y + 5, modDescBG.width - 10);
+		modDesc.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		modDesc.borderSize = 2;
+		modDesc.text = description;
+		modDesc.x = modDescBG.x + 5;
+
+		versionText = new FlxText(0, 0, modDescBG.width - 10);
+		versionText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		versionText.borderSize = 2;
+		versionText.text = version;
+		versionText.x = modDescBG.x + 5;
+		versionText.y = modDescBG.y + modDescBG.height - versionText.height - 5;
+
+		add(iconBG);
+		add(modNameBG);
+		add(modDescBG);
+
+		add(icon);
+		add(modName);
+		add(modDesc);
+		add(versionText);
+
+		daSwitch = new FlxUIButton(0, 0, '');
+		daSwitch.loadGraphicSlice9([Paths.image('customButton')], 20, 20, [[4, 4, 16, 16]], false, 20, 20);
+		daSwitch.resize(50, 30);
+		daSwitch.updateHitbox();
+		daSwitch.label.resize(50, 24);
+		daSwitch.label.offset.y = 5;
+		daSwitch.x = modDescBG.x + modDescBG.width - daSwitch.width - 10;
+		daSwitch.y = modDescBG.y + modDescBG.height - daSwitch.height - 10;
+		daSwitch.label.color = 0xFF000000;
+		add(daSwitch);
+
+		prioritySwitch = new FlxUIButton(0, 0, '');
+		prioritySwitch.loadGraphicSlice9([Paths.image('customButton')], 20, 20, [[4, 4, 16, 16]], false, 20, 20);
+		prioritySwitch.resize(50, 30);
+		prioritySwitch.updateHitbox();
+		prioritySwitch.label.resize(50, 24);
+		prioritySwitch.label.offset.y = 5;
+		prioritySwitch.x = daSwitch.x - prioritySwitch.width - 10;
+		prioritySwitch.y = modDescBG.y + modDescBG.height - prioritySwitch.height - 10;
+		// add(prioritySwitch);
+
+		buttonToggle(true);
 	}
 
-	public override function clearCache()
+	override function update(elapsed:Float)
 	{
-		super.clearCache();
-		Debug.logWarn('Custom asset cache has been cleared.');
+		super.update(elapsed);
+
+		if (daSwitch.justPressed)
+			buttonToggle();
 	}
 
-	public override function exists(id:String):Bool
+	function buttonToggle(init:Bool = false):Void
 	{
-		Debug.logTrace('Call to ModdingStateBackend: exists($id)');
-		return super.exists(id);
+		var loadModFile:String = Paths.loadModFile(modRepping);
+		var yaml = Yaml.parse(File.getContent(loadModFile));
+
+		if (FileSystem.exists(loadModFile))
+		{
+			if (!init)
+			{
+				if (Paths.checkModLoad(modRepping))
+				{
+					Yaml.write(loadModFile, {
+						'mod-priority': yaml.get('mod-priority'),
+						'load': false
+					});
+				}
+				else
+				{
+					Yaml.write(loadModFile, {
+						'mod-priority': yaml.get('mod-priority'),
+						'load': true
+					});
+				}
+			}
+		}
+		else
+		{
+			Yaml.write(loadModFile, {
+				'mod-priority': yaml.get('mod-priority'),
+				'load': false
+			});
+		}
+
+		if (!Paths.checkModLoad(modRepping))
+		{
+			if (!init)
+				FlxG.sound.play(Paths.sound('modToggleOff'));
+
+			daSwitch.color = 0xFFFF0000;
+			daSwitch.label.text = "OFF";
+		}
+		else
+		{
+			if (!init)
+				FlxG.sound.play(Paths.sound('modToggleOn'));
+
+			daSwitch.color = 0xFF00FF00;
+			daSwitch.label.text = "ON";
+		}
 	}
 
-	public override function getBytes(id:String):lime.utils.Bytes
-	{
-		Debug.logTrace('Call to ModdingStateeBackend: getBytes($id)');
-		return super.getBytes(id);
-	}
-
-	public override function getText(id:String):String
-	{
-		Debug.logTrace('Call to ModdingStateBackend: getText($id)');
-		return super.getText(id);
-	}
-
-	public override function list(type:PolymodAssetType = null):Array<String>
-	{
-		Debug.logTrace('Listing assets in custom asset cache ($type).');
-		return super.list(type);
-	}
+	function priorityToggle(init:Bool = false):Void {}
 }
 #end

@@ -29,6 +29,7 @@ class Note extends FlxSprite
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
+	public var willMiss:Bool = false;
 	public var prevNote:Note;
 	public var modifiedByLua:Bool = false;
 	public var sustainLength:Float = 0;
@@ -243,21 +244,30 @@ class Note extends FlxSprite
 		}
 	}
 
-	override function update(elapsed:Float)
+	override function update(elapsed:Float) // Fixed the god damn inputs
 	{
 		super.update(elapsed);
 
 		if (mustPress)
 		{
-			// Below is the input system code
-			if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
-				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
-				canBeHit = true;
-			else
-				canBeHit = false;
-
-			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
+			if (willMiss && !wasGoodHit)
+			{
 				tooLate = true;
+				canBeHit = false;
+			}
+			else
+			{
+				if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset)
+				{
+					if (strumTime < Conductor.songPosition + 0.5 * Conductor.safeZoneOffset)
+						canBeHit = true;
+				}
+				else
+				{
+					willMiss = true;
+					canBeHit = true;
+				}
+			}
 		}
 		else
 		{

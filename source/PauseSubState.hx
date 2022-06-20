@@ -21,7 +21,15 @@ class PauseSubState extends MusicBeatSubstate // removed the shitty offset text 
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
-	var menuItems:Array<String> = ['Resume', 'Restart Song', 'BotPlay', 'Exit to menu'];
+	var menuItems:Array<String> = [
+		'Resume',
+		'Restart Song',
+		'BotPlay',
+		// 'Change Difficulty',
+		'Toggle Practice Mode',
+		'Exit to menu'
+	];
+	var difficultyChoices:Array<String> = ['EASY', 'NORMAL', 'HARD', 'BACK'];
 
 	// var menuItems:Array<String> = ['Resume', 'Restart Song', 'BotPlay', 'Change KeyBinds', 'Exit to menu'];
 	var curSelected:Int = 0;
@@ -31,6 +39,8 @@ class PauseSubState extends MusicBeatSubstate // removed the shitty offset text 
 	public static var practicemode:Bool = false;
 
 	var pauseMusic:FlxSound;
+
+	var practiceText:FlxText;
 
 	public function new(x:Float, y:Float)
 	{
@@ -66,6 +76,14 @@ class PauseSubState extends MusicBeatSubstate // removed the shitty offset text 
 		blueballed.setFormat(Paths.font('vcr.ttf'), 32);
 		blueballed.updateHitbox();
 		add(blueballed);
+
+		practiceText = new FlxText(20, 15 + 96, 0, "PRACTICE MODE", 32);
+		practiceText.scrollFactor.set();
+		practiceText.setFormat(Paths.font('vcr.ttf'), 32);
+		practiceText.updateHitbox();
+		practiceText.x = FlxG.width - (practiceText.width + 20);
+		practiceText.visible = PlayState.practiceMode;
+		add(practiceText);
 
 		blueballed.alpha = 0;
 		levelDifficulty.alpha = 0;
@@ -128,6 +146,11 @@ class PauseSubState extends MusicBeatSubstate // removed the shitty offset text 
 					close();
 				case "Restart Song":
 					FlxG.resetState();
+				// case "Change Difficulty":
+				//	menuItems = difficultyChoices;
+				case "Toggle Practice Mode":
+					PlayState.practiceMode = !PlayState.practiceMode;
+					practiceText.visible = PlayState.practiceMode;
 				case 'BotPlay':
 					if (FlxG.save.data.botplay == null)
 						FlxG.save.data.botplay = true;
