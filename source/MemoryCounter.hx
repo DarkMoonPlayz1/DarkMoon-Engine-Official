@@ -21,7 +21,7 @@ class MemoryCounter extends TextField
 		x = inX;
 		y = inY;
 		selectable = false;
-		defaultTextFormat = new TextFormat("_sans", 14, inCol);
+		defaultTextFormat = new TextFormat("_sans", 12, inCol);
 
 		addEventListener(Event.ENTER_FRAME, onEnter);
 		width = 150;

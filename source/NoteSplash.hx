@@ -11,10 +11,10 @@ class NoteSplash extends FlxSprite
 
 		frames = Paths.getSparrowAtlas('noteSplashes', 'shared');
 
-		animation.addByPrefix("splash-0", "note splash purple", 24, false);
-		animation.addByPrefix("splash-1", "note splash blue", 24, false);
-		animation.addByPrefix("splash-2", "note splash green", 24, false);
-		animation.addByPrefix("splash-3", "note splash red", 24, false);
+		animation.addByPrefix("splash-0", "purple splash", 24, false);
+		animation.addByPrefix("splash-1", "blue splash", 24, false);
+		animation.addByPrefix("splash-2", "green splash", 24, false);
+		animation.addByPrefix("splash-3", "red splash", 24, false);
 
 		setupNoteSplash(x, y, note);
 		antialiasing = true;
@@ -26,7 +26,7 @@ class NoteSplash extends FlxSprite
 		alpha = 0.6;
 		animation.play('splash-' + note, true);
 		updateHitbox();
-		offset.set(0.2 * width, 0.2 * height);
+		offset.set(0.1 * width, 0.1 * height);
 	}
 
 	override function update(elapsed:Float)

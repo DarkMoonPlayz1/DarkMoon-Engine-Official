@@ -1,5 +1,5 @@
-// Updated modchart system code ripped off from Kade Engine, Credits to Kade for the original code
-// LUA MY LOVE
+// this file is for modchart things, this is to declutter playstate.hx
+// Lua
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import openfl.display3D.textures.VideoTexture;
@@ -44,7 +44,7 @@ class ModchartState
 		{
 			if (p != null)
 			{
-				Application.current.window.alert("LUA ERROR:\n" + p + "\nhaxe things: " + e, "DarkMoon Engine Modcharts");
+				Application.current.window.alert("LUA ERROR:\n" + p + "\nhaxe things: " + e, "DarkMoonEngine Modcharts");
 				lua = null;
 				LoadingState.loadAndSwitchState(new MainMenuState());
 			}
@@ -285,7 +285,7 @@ class ModchartState
 		PlayState.instance.removeObject(PlayState.boyfriend);
 		PlayState.boyfriend = new Boyfriend(oldboyfriendx, oldboyfriendy, id);
 		PlayState.instance.addObject(PlayState.boyfriend);
-		PlayState.instance.iconP1.animation.play(id);
+		PlayState.instance.iconP2.animation.play(id);
 	}
 
 	function makeAnimatedLuaSprite(spritePath:String, names:Array<String>, prefixes:Array<String>, startAnim:String, id:String)
@@ -415,7 +415,7 @@ class ModchartState
 
 		if (result != 0)
 		{
-			Application.current.window.alert("LUA COMPILE ERROR:\n" + Lua.tostring(lua, result), "Kade Engine Modcharts");
+			Application.current.window.alert("LUA COMPILE ERROR:\n" + Lua.tostring(lua, result), "DarkMoonEngine Modcharts");
 			lua = null;
 			LoadingState.loadAndSwitchState(new MainMenuState());
 		}
@@ -484,6 +484,36 @@ class ModchartState
 		});
 
 		// hud/camera
+
+		/*Lua_helper.add_callback(lua,"initBackgroundVideo", function(videoName:String) {
+				trace('playing assets/videos/' + videoName + '.webm');
+				PlayState.instance.backgroundVideo("assets/videos/" + videoName + ".webm");
+			});
+			Lua_helper.add_callback(lua,"pauseVideo", function() {
+				if (!GlobalVideo.get().paused)
+					GlobalVideo.get().pause();
+			});
+			Lua_helper.add_callback(lua,"resumeVideo", function() {
+				if (GlobalVideo.get().paused)
+					GlobalVideo.get().pause();
+			});
+
+			Lua_helper.add_callback(lua,"restartVideo", function() {
+				GlobalVideo.get().restart();
+			});
+			Lua_helper.add_callback(lua,"getVideoSpriteX", function() {
+				return PlayState.instance.videoSprite.x;
+			});
+			Lua_helper.add_callback(lua,"getVideoSpriteY", function() {
+				return PlayState.instance.videoSprite.y;
+			});
+			Lua_helper.add_callback(lua,"setVideoSpritePos", function(x:Int,y:Int) {
+				PlayState.instance.videoSprite.setPosition(x,y);
+			});
+
+			Lua_helper.add_callback(lua,"setVideoSpriteScale", function(scale:Float) {
+				PlayState.instance.videoSprite.setGraphicSize(Std.int(PlayState.instance.videoSprite.width * scale));
+		});*/
 
 		Lua_helper.add_callback(lua, "setHudAngle", function(x:Float)
 		{
@@ -1255,19 +1285,15 @@ class ModchartState
 
 		/*Lua_helper.add_callback(lua,"createShader", function(frag:String,vert:String) {
 				var shader:LuaShader = new LuaShader(frag,vert);
-
 				trace(shader.glFragmentSource);
-
 				shaders.push(shader);
 				// if theres 1 shader we want to say theres 0 since 0 index and length returns a 1 index.
 				return shaders.length == 1 ? 0 : shaders.length;
 			});
 
-
 			Lua_helper.add_callback(lua,"setFilterHud", function(shaderIndex:Int) {
 				PlayState.instance.camHUD.setFilters([new ShaderFilter(shaders[shaderIndex])]);
 			});
-
 			Lua_helper.add_callback(lua,"setFilterCam", function(shaderIndex:Int) {
 				FlxG.camera.setFilters([new ShaderFilter(shaders[shaderIndex])]);
 		});*/

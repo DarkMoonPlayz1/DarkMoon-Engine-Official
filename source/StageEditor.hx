@@ -105,7 +105,7 @@ class StageEditor extends FlxState
 		FlxG.camera = camGame;
 		camGame.follow(camFollow);
 
-		posText = new FlxText(0, 0);
+		posText = new FlxText(0, 60);
 		posText.size = 26;
 		posText.scrollFactor.set();
 		posText.cameras = [camHUD];

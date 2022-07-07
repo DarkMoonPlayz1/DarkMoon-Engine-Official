@@ -22,6 +22,7 @@ import Discord.DiscordClient;
 class StoryMenuState extends MusicBeatState
 {
 	var scoreText:FlxText;
+	var isCutscene:Bool = false;
 
 	var weekData:Array<Dynamic> = [
 		['Tutorial'],
@@ -304,10 +305,23 @@ class StoryMenuState extends MusicBeatState
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
 
-			new FlxTimer().start(1, function(tmr:FlxTimer)
+			var video:MP4Handler = new MP4Handler();
+
+			if (curWeek == 7 && !isCutscene) // Checks if the current week is week 7.
 			{
-				LoadingState.loadAndSwitchState(new PlayState(), true);
-			});
+				video.playMP4(Paths.video('ughCutscene'), new PlayState());
+				isCutscene = true;
+			}
+			else
+			{
+				new FlxTimer().start(1, function(tmr:FlxTimer)
+				{
+					if (isCutscene)
+						video.onVLCComplete();
+
+					LoadingState.loadAndSwitchState(new PlayState(), true);
+				});
+			}
 		}
 	}
 

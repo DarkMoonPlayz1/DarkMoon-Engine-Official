@@ -55,8 +55,8 @@ import openfl.geom.Matrix;
 import openfl.utils.AssetLibrary;
 import openfl.utils.AssetManifest;
 import openfl.utils.AssetType;
-import shaderslmfao.BuildingShaders;
-import shaderslmfao.ColorSwap;
+import shaders.BuildingShaders;
+import shaders.ColorSwap;
 
 using StringTools;
 
@@ -178,8 +178,7 @@ class PlayState extends MusicBeatState
 	public var iconP2:HealthIcon;
 	public var addPulse:Float;
 	public var camHUD:FlxCamera;
-
-	private var camGame:FlxCamera;
+	public var camGame:FlxCamera;
 
 	// Middlescroll Option
 	var blueBalls:Array<Int> = [4, 5];
@@ -382,13 +381,14 @@ class PlayState extends MusicBeatState
 		// var gameCam:FlxCamera = FlxG.camera;
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
-		camHUD.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camGame);
-		FlxG.cameras.add(camHUD);
+		FlxG.cameras.add(camHUD, false);
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
 
-		FlxCamera.defaultCameras = [camGame];
+		FlxG.cameras.setDefaultDrawTarget(camGame, true);
+
+		camHUD.bgColor.alpha = 0;
 
 		persistentUpdate = true;
 		persistentDraw = true;
@@ -2291,7 +2291,7 @@ class PlayState extends MusicBeatState
 			#end
 		}
 
-		if (FlxG.keys.justPressed.ZERO)
+		if (FlxG.keys.justPressed.EIGHT)
 		{
 			FlxG.switchState(new AnimationDebug(SONG.player1));
 			#if windows
@@ -3103,6 +3103,13 @@ class PlayState extends MusicBeatState
 
 					FlxTransitionableState.skipNextTransIn = true;
 					FlxTransitionableState.skipNextTransOut = true;
+
+					/* if (songLowercase == 'guns')
+						{
+							var video:MP4Handler = new MP4Handler();
+							video.playMP4(Paths.video('gunsCutscene'), new PlayState());
+					}*/
+
 					prevCamFollow = camFollow;
 
 					PlayState.SONG = Song.loadFromJson(nextSongLowercase + difficulty, PlayState.storyPlaylist[0]);
